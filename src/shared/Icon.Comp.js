@@ -197,12 +197,12 @@ export const ProfileNavLineIcon = ({
   />
 );
 
-export const CalenderViewIcon = ({ size = 30, color = AppColors.Red }) => (
+export const CalenderViewIcon = ({ size = 30, color = AppColors.white }) => (
   <CalenderView
     height={size}
     width={size}
     color={color}
-    // style={{ backgroundColor: AppColors.Transparent }}
+    style={{ backgroundColor: AppColors.Transparent }}
   />
 );
 

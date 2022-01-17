@@ -41,7 +41,7 @@ export const ProfilePicker = ({
       <TouchableOpacity
         activeOpacity={0.9}
         onPress={() => {
-          navigation.navigate('PhotosList', {
+          navigation.navigate('PhotosListScreen', {
             pickerType: 'single',
             routeName: 'ProfileScreen',
           });
@@ -73,6 +73,8 @@ export const ProfilePicker = ({
   );
 };
 
+
+
 export const GenderOptions = [
   {
     key: '1',
@@ -103,14 +105,33 @@ export const CameraButtonWhite = ({size}) => {
   );
 };
 
-export const SettingScreen = () => {
+export const ProfileScreen = ({route}) => {
   const [loading, setLoading] = React.useState(false);
   const [Username, setUsername] = React.useState('');
   const [BirthDate, setBirthDate] = React.useState('');
-  const [imageUri, setimageUri] = React.useState(null);
+  const [imageUri, setImageUri] = React.useState(null);
   const [Gender, setGender] = React.useState({key: 1, text: 'male'});
   const [disable, setDisable] = React.useState(true);
   const navigation = useNavigation();
+  React.useEffect(() => {
+    if (route.params?.imageList) {
+      ImagePicker.openCropper({
+        path: route.params.imageList[0],
+        width: 400,
+        height: 400,
+        cropperCircleOverlay: true,
+        cropperToolbarTitle: 'Crop Photo',
+        cropperActiveWidgetColor: 'white',
+        cropperStatusBarColor: 'black',
+        cropperToolbarColor: 'black',
+        cropperToolbarWidgetColor: 'white',
+      }).then(image => {
+        setImageUri(image.path);
+        console.log(image.path);
+      });
+    }
+  }, [route.params?.imageList]);
+
   return (
     <SafeAreaView style={[GStyles.containerFlex, {backgroundColor: 'black'}]}>
       <AppHeader colorIcon={AppColors.white} enableBack>
@@ -198,7 +219,7 @@ export const SettingScreen = () => {
           </View>
 
           <VertSpace size={Spacing.size40} />
-          <Label title={'Gender'} />
+          <Label1 title={'Gender'} />
           <SelectableRadioButton
             data={GenderOptions}
             onSelected={value => {
@@ -250,6 +271,41 @@ export const Label = ({title = 'Title', required = false, onPress}) => {
     </View>
   );
 };
+
+
+export const Label1 = ({title = 'Title', required = false, onPress}) => {
+  return (
+    <View
+      style={{
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        // backgroundColor: 'wheat',
+      }}>
+      <Text
+        style={{
+          color: AppColors.MediumGrey,
+          fontFamily: AppFonts.CalibriBold,
+          fontSize: FontSize.large,
+          lineHeight: FontSize.large,
+        }}>
+        {title}
+      </Text>
+
+      {required ? (
+        <Text
+          style={{
+            color: AppColors.Red,
+            fontFamily: AppFonts.CalibriBold,
+            fontSize: FontSize.large,
+            lineHeight: FontSize.large,
+          }}>
+          *
+        </Text>
+      ) : null}
+    </View>
+  );
+};
+
 
 const styles = StyleSheet.create({
   textInputContainer: {
