@@ -100,6 +100,9 @@ export const SelectableRadioButton=({
   RightComponent = null,
   RightButtonOnPress = () => {},
   enableIcon = false,
+  paddingHorizontal=20,
+  ContainerWidth=120,
+  buttonWidth=90
 }) =>{
   // data -> for passing dropdown data
   // initial -> for
@@ -125,7 +128,7 @@ export const SelectableRadioButton=({
                 paddingVertical: Spacing.large,
                 marginLeft:-10,
                 justifyContent:"center",
-                alignItems:"center"
+                alignItems:"center",width:ContainerWidth
               },
             ]}
             key={res.key}
@@ -142,13 +145,14 @@ export const SelectableRadioButton=({
                 {
                   backgroundColor:
                     value === res.key
-                      ? AppColors.white
-                      : AppColors.LightGrey,
-                  paddingHorizontal: 22,
+                      ? '#C4C0C0'
+                      : '#707070',
+                  
                   paddingVertical: 10,
+                  paddingHorizontal:paddingHorizontal,
                   borderRadius: 30,
                   marginRight: 30,
-                  width:116
+                  width:buttonWidth
                 },
               ]}
             >
@@ -157,7 +161,7 @@ export const SelectableRadioButton=({
                   // ...GStyles.radioText,
                   fontSize: FontSize.inputText,
                   fontFamily: AppFonts.CalibriBold,
-                  color:value === res.key?'black':'white',
+                  color:value === res.key?'#524848':'#C4C0C0',
                 }}
               >
                 {res.text}

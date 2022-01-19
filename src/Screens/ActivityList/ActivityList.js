@@ -6,7 +6,6 @@ import {AccentButton, Container} from '../../Components';
 import {AppHeader} from '../../Components/AppHeader';
 import {
   FontSize,
-  HoriSpace,
   Spacing,
   VertSpace,
 } from '../../shared/Global.styles';
@@ -105,7 +104,7 @@ const Activities = [
     key: 22,
   },
 ];
-const ArrayHolder = [];
+
 export const ActivityList = ({route, navigation}) => {
   const [search, setSearch] = React.useState(Activities);
   // const navigation = useNavigation();
@@ -149,9 +148,15 @@ export const ActivityList = ({route, navigation}) => {
         <VertSpace size={50} />
         <FlatList
           data={search}
+          // ItemSeparatorComponent={()=>{
+          //   return(
+          //     <HorizontalLine marginLeft={30} height={0.7} backgroundColor='gray' width='50%'  alignItems='center'/>
+          //   )
+          // }}
           keyExtractor={item => item.key}
           renderItem={({item}) => (
             <View style={{flex: 1}}>
+
               <Text
                 style={styles.item}
                 onPress={() => {
@@ -159,7 +164,11 @@ export const ActivityList = ({route, navigation}) => {
                 }}>
                 {item.name}
               </Text>
-              <VertSpace size={20} />
+              <VertSpace size={10} />
+
+              <HorizontalLine marginLeft={10} height={0.7} backgroundColor='gray' width='50%'  alignItems='center'/>
+
+              <VertSpace size={10} />
             </View>
           )}
         />
@@ -185,5 +194,7 @@ const styles = StyleSheet.create({
   item: {
     color: 'white',
     fontSize: FontSize.large,
+    paddingLeft:0,
+  
   },
 });

@@ -28,6 +28,8 @@ import Gallery from '../assets/svg/Icons/Gallery.svg';
 // OTHER ICOSN
 import Cancel from '../assets/svg/Icons/Cancel.svg';
 import Edit from '../assets/svg/Icons/Edit.svg';
+import EditWhite from '../assets/svg/Icons/EDIT-white.svg';
+
 import Gender from '../assets/svg/Icons/Gender.svg';
 import Avatar from '../assets/svg/Icons/Avatar.svg';
 import Calender from '../assets/svg/Icons/Calender.svg';
@@ -677,6 +679,19 @@ export const EditIcon = ({ size = 30 }) => {
     />
   );
 };
+
+export const EditWIcon = ({ size = 30 }) => {
+  return (
+    <EditWhite
+      height={size}
+      width={size}
+      style={{ backgroundColor: AppColors.Transparent }}
+    />
+  );
+};
+
+
+
 
 export const AvatarIcon = ({ size = 30, color = AppColors.DarkGrey }) => {
   return (

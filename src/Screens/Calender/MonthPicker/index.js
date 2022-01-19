@@ -19,6 +19,7 @@ import {
 import {NoideaIcon} from '../../../shared/Icon.Comp';
 import Ripple from 'react-native-material-ripple';
 import {useNavigation} from '@react-navigation/core';
+import CalendarPicker from 'react-native-calendar-picker';
 
 export const stringValueDate = (date, month, year) => {
   var dateString = `${date}`,
@@ -31,51 +32,38 @@ export const stringValueDate = (date, month, year) => {
 
 // MONTH PICKER
 export const MonthPicker = ({route}) => {
-  const calenderRef = React.useRef(null);
-  const [Data, setData] = React.useState(null);
-  const [YearSelected, setYearSelected] = React.useState('2020');
+
+  const [YearSelected, setYearSelected] = React.useState(
+    new Date().getFullYear(),
+  );
   const [MonthIndex, setMonthIndex] = React.useState(0);
-  const [SelectedDate, setSelectedDate] = React.useState('');
   const navigation = useNavigation();
-  // const { routename, subRoutename } = route.params;
-  const [MarkedDate, setMarkedDate] = React.useState({});
-  // MarkedDate[`${SelectedDate}`] = { selected: true };
 
+
+
+
+  const [MonthSelected, setMonthSelected] = React.useState(
+    new Date().getMonth(),
+  );
   React.useEffect(() => {
-    let tempMarkedDate = {};
-    tempMarkedDate[`${SelectedDate}`] = {selected: true};
-    setMarkedDate(tempMarkedDate);
-  }, [SelectedDate]);
+    setMonthSelected(MonthIndex);
+  }, [MonthIndex]);
 
-  // USEFECT
-  React.useLayoutEffect(() => {
-    const CurrentDate = moment().date();
-    const CurrentYear = moment().year();
-    // const CurrentYear = 2000;
-    const CurrentMonthIndex = moment().month();
-    setMonthIndex(CurrentMonthIndex);
-    setSelectedDate(
-      stringValueDate(CurrentDate, CurrentMonthIndex+1, CurrentYear),
-    );
-    // alert(typeof CurrentYear)
-  }, []);
-
-
-  // const UpdateSelectedDate = (date, month, year) => {
-  //   setSelectedDate(
-  //     `${year}-${month < 10 ? '0' + month : month}-${
-  //       date < 10 ? '0' + date : date
-  //     }`
-  //   );
-  // };
-  const ABHAYA = '2000-01-02';
+  const ABHAYA = '2000-00-02';
+  const maxDate = new Date(YearSelected, MonthSelected, 1);
 
   //  alert(ABHAYA.length);
- 
+  const [selectedStartDate, setSelectedStartDate] = React.useState(null);
+  const startDate = selectedStartDate
+    ? selectedStartDate.format('YYYY-MM-DD').toString()
+    : '';
   return (
     <SafeAreaView style={{backgroundColor: '#161616', flex: 1}}>
       <AppHeader colorIcon={AppColors.white} enableBack>
-        <NextButton title="Done" InActiveColor="white" />
+        <NextButton title="Done" 
+        disabled={false}
+          onPress={()=> {route.params.onReturn(startDate), navigation.goBack()}}
+        />
       </AppHeader>
       <HoriSpace size={20} />
       <Container>
@@ -92,111 +80,73 @@ export const MonthPicker = ({route}) => {
         />
 
         <VertSpace size={Spacing.xlarge} />
+        <ScrollView
+          showsHorizontalScrollIndicator={false}
+          horizontal
+          style={{marginHorizontal: -Spacing.large}}>
+          <HoriSpace size={Spacing.large} />
 
-        <MonthList
-          MonthIndex={MonthIndex}
-          onMonthPress={monthIndex => {
-            var monthString =
-              monthIndex < 10 ? '0' + (monthIndex + 1) : monthIndex;
-
-            calenderRef?.current.scrollToMonth(`${2021}-${monthString}`);
-          }}
-        />
+          {MonthNames.map((month, index) => {
+            return (
+              <View key={index} style={{flexDirection: 'row'}}>
+                <Ripple
+                  onPress={() => {
+                    setMonthSelected(index);
+                  }}
+                  // disabled={index > MonthIndex}
+                  rippleContainerBorderRadius={100}
+                  style={{
+                    ...styles.monthContainer,
+                    backgroundColor:
+                      // index > MonthIndex
+                      //   ? AppColors.VeryLightGrey
+                      index === MonthSelected
+                        ? AppColors.white
+                        : AppColors.DarkGrey,
+                  }}>
+                  <Text
+                    style={{
+                      ...styles.monthFontStyles,
+                      color:
+                        // index > MonthIndex
+                        //   ? AppColors.LightGrey
+                        index === MonthSelected
+                          ? AppColors.DarkGrey
+                          : AppColors.white,
+                      fontWeight: '700',
+                    }}>
+                    {month}
+                  </Text>
+                </Ripple>
+                <HoriSpace size={Spacing.medium} />
+              </View>
+            );
+          })}
+        </ScrollView>
       </Container>
-      <CalendarList
-        ref={calenderRef}
-        horizontal
-        onVisibleMonthsChange={months => {}}
-        pagingEnabled
-        pastScrollRange={MonthIndex}
-        futureScrollRange={12}
-        scrollEnabled={false}
-        showScrollIndicator={true}
-        current={SelectedDate}
-        minDate={'1950-01-01'}
-        maxDate={'2100-01-01'}
-        onDayPress={day => {
-          setSelectedDate(day.dateString);
-          setData(day);
-        }}
-        onDayLongPress={day => {}}
-        markedDates={MarkedDate}
-        monthFormat={'yyyy MM'}
-        onMonth-Change={month => {}}
-        disableAllTouchEventsForDisabledDays={true}
-        theme={AppCalenderTheme}
+
+      <CalendarPicker
+        initialDate={maxDate}
+        onDateChange={setSelectedStartDate}
+        selectedRangeEndTextStyle={{color: 'red'}}
+        // todayBackgroundColor="#f2e6ff"
+        selectedDayColor="#fff"
+        selectedDayStyle={{backgroundColor: '#fff'}}
+        selectedDayTextColor="#161616"
+        textStyle={{color: 'white'}}
+        previousTitle=" "
+        nextTitle=" "
+        todayBackgroundColor={AppColors.green}
+        scaleFactor={375}
+          textStyle={{
+            fontFamily: 'Cochin',
+            color: '#fff',
+          }}
       />
+
+      <Text style={{color: 'white'}}>Birthday: {startDate}</Text>
     </SafeAreaView>
   );
-};
-
-const MonthList = ({MonthIndex, onMonthPress = () => {}}) => {
-  const [MonthSelected, setMonthSelected] = React.useState(-1);
-  React.useEffect(() => {
-    setMonthSelected(MonthIndex);
-  }, [MonthIndex]);
-  return (
-    <ScrollView
-      showsHorizontalScrollIndicator={false}
-      horizontal
-      style={{marginHorizontal: -Spacing.large}}>
-      <HoriSpace size={Spacing.large} />
-      {MonthNames.map((month, index) => {
-        return (
-          <View key={index.toString()} style={{flexDirection: 'row'}}>
-            <Ripple
-              onPress={() => {
-                onMonthPress(index);
-                setMonthSelected(index);
-              }}
-              disabled={index > MonthIndex}
-              rippleContainerBorderRadius={100}
-              style={{
-                ...styles.monthContainer,
-                backgroundColor:
-                  index > MonthIndex
-                    ? AppColors.VeryLightGrey
-                    : index == MonthSelected
-                    ? AppColors.DarkGrey
-                    : AppColors.LightGrey,
-              }}>
-              <Text
-                style={{
-                  ...styles.monthFontStyles,
-                  color:
-                    index > MonthIndex
-                      ? AppColors.LightGrey
-                      : index == MonthSelected
-                      ? AppColors.white
-                      : AppColors.DarkGrey,
-                }}>
-                {month}
-              </Text>
-            </Ripple>
-            <HoriSpace size={Spacing.medium} />
-          </View>
-        );
-      })}
-    </ScrollView>
-  );
-};
-const AppCalenderTheme = {
-  textDayFontFamily: AppFonts.CalibriBold,
-  backgroundColor: '#161616',
-  calendarBackground: '#161616',
-  textSectionTitleColor: '#b6c1cd',
-  textSectionTitleDisabledColor: '#d9e1e8',
-  selectedDayBackgroundColor: AppColors.white,
-  selectedDayTextColor: AppColors.DarkGrey,
-  todayTextColor: AppColors.blue,
-  dayTextColor: AppColors.white,
-  textDisabledColor: AppColors.VeryLightGrey,
-  dotColor: AppColors.VeryDarkGrey,
-  selectedDotColor: '#ffffff',
-  arrowColor: AppColors.VeryDarkGrey,
-  disabledArrowColor: AppColors.VeryLightGrey,
-  monthTextColor: AppColors.DarkGrey,
-  indicatorColor: AppColors.LightGrey,
 };
 
 const styles = StyleSheet.create({
@@ -218,48 +168,3 @@ const styles = StyleSheet.create({
     fontFamily: AppFonts.CalibriBold,
   },
 });
-
-{
-  /* <View style={{ flexDirection: 'row', alignItems: 'center' }}> */
-}
-{
-  /* <Ripple
-  onPress={() => {
-    navigation.navigate('RecaptureActivity', { DatePicked: false });
-  }}
-> */
-}
-
-{
-  /* </Ripple> */
-}
-{
-  /* <HoriSpace size={20} /> */
-}
-{
-  /* <NextButton
-  title={'Done'}
-  disabled={false}
-  onPress={() => {
-    if (
-      subRoutename === undefined ||
-      subRoutename === null ||
-      subRoutename === ''
-    ) {
-      navigation.navigate(routename, {
-        DatePicked: true,
-        data: Data,
-      });
-    } else {
-      navigation.navigate(routename, {
-        screen: subRoutename,
-        params: {
-          DatePicked: true,
-          data: Data,
-        },
-      });
-    }
-  }}
-/> */
-}
-// </View>

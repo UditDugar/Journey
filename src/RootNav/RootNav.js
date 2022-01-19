@@ -1,11 +1,9 @@
 // In App.js in a new project
-
 import * as React from 'react';
 import {View, Text} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {LoginScreen} from '../Screens/Login/LoginScreen';
-import {Home} from '../Screens/Home/Home';
 import { OtpVerification } from '../Screens/Login/OtpVerification';
 import { ProfileScreen } from '../Screens/Profile/ProfileScreen';
 import {AddList} from '../Screens/AddList/AddList'
@@ -22,9 +20,8 @@ export const RootNav = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator
-        initialRouteName="ProfileScreen"
+        initialRouteName="LoginScreen"
         screenOptions={{headerShown: false}}>
-        <Stack.Screen name="Home" component={Home} />
         <Stack.Screen name="LoginScreen" component={LoginScreen} />
         <Stack.Screen name="OtpVerificationScreen" component={OtpVerification} />
         <Stack.Screen name="ProfileScreen" component={ProfileScreen} />

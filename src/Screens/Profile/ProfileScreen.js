@@ -24,7 +24,7 @@ import {
 } from '../../shared/Global.styles';
 import {Container} from '../../Components/index';
 import {wp} from '../../shared/dimens';
-import {BioCircleIcon, CameraWhiteIcon, EditIcon} from '../../shared/Icon.Comp';
+import {BioCircleIcon, CameraWhiteIcon, EditIcon, EditWIcon} from '../../shared/Icon.Comp';
 import {ImgSourceCheck} from '../../Components/BioImageView';
 
 export const ProfilePicker = ({
@@ -32,6 +32,7 @@ export const ProfilePicker = ({
   style = {},
   size = wp(180),
   onSelected = () => {},
+  onPress
 }) => {
   const navigation = useNavigation();
 
@@ -40,12 +41,7 @@ export const ProfilePicker = ({
     <View style={{width: size, height: size}}>
       <TouchableOpacity
         activeOpacity={0.9}
-        onPress={() => {
-          navigation.navigate('PhotosListScreen', {
-            pickerType: 'single',
-            routeName: 'ProfileScreen',
-          });
-        }}
+         onPress={onPress}
         style={{...style, position: 'absolute'}}>
         <View>
           {/* <View style={{ backgroundColor: 'red' }}>
@@ -61,7 +57,7 @@ export const ProfilePicker = ({
               borderRadius: size / 2,
               position: 'absolute',
             }}
-            source={{uri: ImgSourceCheck(imageUrlParmas)}}
+            source={{uri: imageUrlParmas}}
             // source={{ uri: `https://picsum.photos/id/1/${size}` }}
           />
           <View style={{position: 'absolute', bottom: 5, right: 0}}>
@@ -151,7 +147,14 @@ export const ProfileScreen = ({route}) => {
         <Container padding={Spacing.xxlarge}>
           <View style={{alignItems: 'center'}}>
             {/* <AppButton title="tets" onPress={() => CropPhoto()} /> */}
-            <ProfilePicker imageUrlParmas={imageUri} />
+            <ProfilePicker imageUrlParmas={imageUri} onPress={() => {
+          navigation.navigate('PhotosListScreen', {
+            onReturn: item => {
+              setImageUri(item);
+                // alert(item)
+              },
+          });
+        }}/>
           </View>
 
           <VertSpace size={40} />
@@ -221,6 +224,9 @@ export const ProfileScreen = ({route}) => {
           <VertSpace size={Spacing.size40} />
           <Label1 title={'Gender'} />
           <SelectableRadioButton
+          ContainerWidth={125}
+          buttonWidth={100}
+          paddingHorizontal={10}
             data={GenderOptions}
             onSelected={value => {
               setGender(value), setDisable(false);
@@ -265,7 +271,7 @@ export const Label = ({title = 'Title', required = false, onPress}) => {
         </Text>
       ) : (
         <Text onPress={onPress}>
-          <EditIcon size={16} />
+          <EditWIcon   size={16} />
         </Text>
       )}
     </View>

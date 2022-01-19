@@ -1,6 +1,6 @@
-import CameraRoll from "@react-native-community/cameraroll";
-import { PermissionsAndroid, Platform } from "react-native";
-import React, { useEffect } from 'react';
+import CameraRoll from '@react-native-community/cameraroll';
+import {PermissionsAndroid, Platform} from 'react-native';
+import React, {useEffect} from 'react';
 import {
   FlatList,
   Image,
@@ -9,18 +9,19 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import { AppHeader } from "../../Components/AppHeader";
-import { AppColors } from "../../assets/AppColors";
-import { Container } from "../../Components";
+import {AppHeader} from '../../Components/AppHeader';
+import {AppColors} from '../../assets/AppColors';
+import {Container} from '../../Components';
+import {useNavigation} from '@react-navigation/native';
 
-export const PhotosList = () => {
+export const PhotosList = ({route}) => {
   const [PhotosList, setPhotosList] = React.useState([]);
   const [albumList, setAlbumList] = React.useState([]);
   const [albumName, setAlbumName] = React.useState('');
-//   useEffect(() => {
-//     getPhotos('');
-//     getAllAlbumData();
-//   }, []);
+  //   useEffect(() => {
+  //     getPhotos('');
+  //     getAllAlbumData();
+  //   }, []);
 
   const [visible, setIsVisible] = React.useState([]);
 
@@ -46,16 +47,8 @@ export const PhotosList = () => {
     );
     return status === 'granted';
   };
-//   const getPhotos = async () => {
-//     const photos = await CameraRoll.getPhotos({
-//       first: 1000,
-//     });
-//     console.log('===============Barsa=====================');
-//     console.log(photos.edges);
-//     console.log('====================================');
-//     setPhotosList(photos.edges.map(edge => edge.node));
-//   };
-const getPhotos =async (albumName) => {
+
+  const getPhotos = async albumName => {
     CameraRoll.getPhotos({
       first: 2000,
       after: '0',
@@ -63,48 +56,54 @@ const getPhotos =async (albumName) => {
       groupTypes: 'Album',
       groupName: albumName,
     })
-      .then((r) => {
-        setPhotosList(r.edges.map(edge => edge.node))
-          })
-      .catch((err) => {
+      .then(r => {
+        setPhotosList(r.edges.map(edge => edge.node));
+      })
+      .catch(err => {
         //Error Loading Images
       });
   };
 
   const getAllAlbumData = () => {
-    CameraRoll.getAlbums({ assetType: 'Photos' }).then((response) => {
+    CameraRoll.getAlbums({assetType: 'Photos'}).then(response => {
       setAlbumList(response);
       console.log(response);
     });
   };
-
+  const navigation = useNavigation();
 
   return (
-    <View style={{ flex: 1, backgroundColor: '#161616'}}>
-       <AppHeader enableBack colorIcon={AppColors.white}/>
-        <Text
-          style={{
-            fontWeight: '900',
-            color: 'white',
-            fontSize: 30,
-            marginLeft: 30,
-            marginBottom:30
-          }}>
-          Gallery
-        </Text>
+    <View style={{flex: 1, backgroundColor: '#161616'}}>
+      <AppHeader enableBack colorIcon={AppColors.white} />
+      <Text
+        style={{
+          fontWeight: '900',
+          color: 'white',
+          fontSize: 30,
+          marginLeft: 30,
+          marginBottom: 30,
+        }}>
+        Gallery
+      </Text>
       <FlatList
-      key={'_'}
+        key={'_'}
         keyExtractor={(_, index) => index.toString()}
         data={PhotosList}
         numColumns={3}
-        renderItem={({ item, index }) => {
+        renderItem={({item, index}) => {
           return (
-
-              <View style={{justifyContent:"center",alignItems:"center",flex:1,margin:10}} >
-            
-            <Image
-              key={index}
+            <TouchableOpacity
+              onPress={() => {route.params.onReturn(item.image.uri), navigation.goBack();
+}}
               style={{
+                justifyContent: 'center',
+                alignItems: 'center',
+                flex: 1,
+                margin: 10,
+              }}>
+              <Image
+                key={index}
+                style={{
                   width: 80,
                   height: 80,
                   resizeMode: 'cover',
@@ -112,14 +111,12 @@ const getPhotos =async (albumName) => {
                   borderWidth: 2,
                   borderColor: '#1ACA7E',
                 }}
-              source={{ uri: item.image.uri }}
-            />
-
-</View>
+                source={{uri: item.image.uri}}
+              />
+            </TouchableOpacity>
           );
         }}
       />
     </View>
   );
 };
-
