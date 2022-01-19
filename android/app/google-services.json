@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "73152427834",
+    "project_id": "journey-4bbca",
+    "storage_bucket": "journey-4bbca.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:73152427834:android:246c2d10043cb88f51c203",
+        "android_client_info": {
+          "package_name": "com.journey"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "73152427834-e1gntcn3ocg9dvqkeufglaf767qck1th.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC7eawuiiOvVcM4z4Fbi_vIPy-LuX5QB5Q"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "73152427834-e1gntcn3ocg9dvqkeufglaf767qck1th.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,12 +1,15 @@
-import { useNavigation } from '@react-navigation/native';
-import React from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {useNavigation} from '@react-navigation/native';
+import React, {useState} from 'react';
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {AppColors} from '../../assets/AppColors';
 import {Container, NextButton, SelectableRadioButton} from '../../Components';
 import {AppHeader} from '../../Components/AppHeader';
 import {AccentButton} from '../../Components/index';
 import {FontSize, Spacing, VertSpace} from '../../shared/Global.styles';
-import {Label} from '../Setting/SettingScreen';
+import {CancelIcon, EditIcon, EditWIcon} from '../../shared/Icon.Comp';
+import {Label} from '../Profile/ProfileScreen';
+import moment from 'moment';
+import { MonthString } from '../Journey/JourneyScreen';
 
 export const YesNoOptions = [
   {
@@ -19,10 +22,31 @@ export const YesNoOptions = [
   },
 ];
 
-export const EnterActivity = () => {
+export const EnterActivity = ({route, navigation}) => {
+  const [item, setItem] = useState(null);
+
+  // const {data}=route.params
+  // console.log(data);
   const [selector, setSelector] = React.useState({key: 1, text: 'Yes'});
   const [disable, setDisable] = React.useState(true);
- const navigation=useNavigation()
+  // const navigation = useNavigation();
+  const stringValueDate = (date, month, year) => {
+    var dateString = `${date}`,
+      monthString = `${month}`;
+
+    return `${year}-${monthString}-${dateString}`;
+  };
+
+  const CurrentDate = moment().date();
+  const CurrentYear = moment().year();
+  const CurrentMonthIndex = moment().month();
+
+  const [state, setState] = React.useState(
+    stringValueDate(CurrentDate, CurrentMonthIndex + 1, CurrentYear),
+  );
+
+  const newDate = state.split('-');
+
   return (
     <View style={{backgroundColor: 'black', flex: 1}}>
       <AppHeader colorIcon={AppColors.white} enableBack>
@@ -30,14 +54,49 @@ export const EnterActivity = () => {
       </AppHeader>
       <Container padding={Spacing.xxlarge} style={{flex: 1}}>
         <VertSpace size={40} />
-        <Text onPress={() => navigation.navigate("ActivityListScreen")} style={styles.EnterActivity}>
-          Enter Activity
-        </Text>
+        <TouchableOpacity
+          onPress={() =>
+            navigation.navigate('ActivityListScreen', {
+              onReturn: item => {
+                setItem(item);
+                // alert(item)
+              },
+            })
+          }>
+          {item === null ? (
+            <Text style={styles.EnterActivity}>Enter Activity ...</Text>
+          ) : (
+            <View
+              style={{
+                justifyContent: 'space-between',
+                flexDirection: 'row',
+                alignItems: 'center',
+              }}>
+              <Text
+                style={[styles.EnterActivity, {color: '#707070', maxWidth: 200}]}>
+                {item}
+              </Text>
+              <Text onPress={() => setItem(null)}>
+              <EditWIcon   size={16} />
+              </Text>
+            </View>
+          )}
+        </TouchableOpacity>
+
         <VertSpace size={40} />
-        <Label title="Date" onPress={() => alert('Abhaya')} />
+        <Label
+          title="Date"
+          onPress={() =>
+            navigation.navigate('MonthPicker', {
+              onReturn: item => setState(item),
+            })
+          }
+        />
         <VertSpace size={10} />
         <Text style={{color: 'white', fontSize: FontSize.inputText}}>
-          8th Dec, 2021
+          {newDate[2]}th{' '}
+          <MonthString MonthIndex={newDate[1]}/>
+          , {newDate[0]}
         </Text>
         <VertSpace size={40} />
         <Label title="Time Duration" onPress={() => alert('Abhaya')} />
@@ -61,7 +120,7 @@ export const EnterActivity = () => {
           }}
           editable={true}
         />
-        <VertSpace size={30} />
+        <VertSpace size={20} />
         <Text
           style={{
             color: AppColors.MediumGrey,

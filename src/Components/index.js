@@ -9,7 +9,8 @@ import {
 import Ripple from 'react-native-material-ripple';
 import { AppColors } from '../assets/AppColors';
 import { AppFonts } from '../assets/fonts/AppFonts';
-import { FontSize ,GStyles,HoriSpace, Spacing} from '../shared/Global.styles';
+import { AppDimens, FontSize ,GStyles,HoriSpace, Spacing} from '../shared/Global.styles';
+import { DownArrowIcon } from '../shared/Icon.Comp';
 
 export const NextButton = ({
   onPress = () => {},
@@ -99,6 +100,9 @@ export const SelectableRadioButton=({
   RightComponent = null,
   RightButtonOnPress = () => {},
   enableIcon = false,
+  paddingHorizontal=20,
+  ContainerWidth=120,
+  buttonWidth=90
 }) =>{
   // data -> for passing dropdown data
   // initial -> for
@@ -124,7 +128,7 @@ export const SelectableRadioButton=({
                 paddingVertical: Spacing.large,
                 marginLeft:-10,
                 justifyContent:"center",
-                alignItems:"center"
+                alignItems:"center",width:ContainerWidth
               },
             ]}
             key={res.key}
@@ -141,13 +145,14 @@ export const SelectableRadioButton=({
                 {
                   backgroundColor:
                     value === res.key
-                      ? AppColors.white
-                      : AppColors.LightGrey,
-                  paddingHorizontal: 22,
+                      ? '#C4C0C0'
+                      : '#707070',
+                  
                   paddingVertical: 10,
+                  paddingHorizontal:paddingHorizontal,
                   borderRadius: 30,
                   marginRight: 30,
-                  width:100
+                  width:buttonWidth
                 },
               ]}
             >
@@ -156,7 +161,7 @@ export const SelectableRadioButton=({
                   // ...GStyles.radioText,
                   fontSize: FontSize.inputText,
                   fontFamily: AppFonts.CalibriBold,
-                  color:value === res.key?'black':'white',
+                  color:value === res.key?'#524848':'#C4C0C0',
                 }}
               >
                 {res.text}
@@ -168,5 +173,56 @@ export const SelectableRadioButton=({
     </View>
   );
 }
+
+
+export const DropdownHeader = ({
+  title = 'Header',
+  RightContainer = () => null,
+  onHeaderPress = () => {},
+  fontStyles = null,
+}) => {
+  return (
+    <View
+      style={{
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        // backgroundColor: AppColors.green,
+      }}
+    >
+      <Ripple
+        onPress={() => onHeaderPress()}
+        rippleContainerBorderRadius={20}
+        rippleFades={true}
+        style={{
+          width: AppDimens.width * 0.6,
+          flexDirection: 'row',
+          alignItems: 'center',
+          paddingRight: 10,
+          // backgroundColor: AppColors.Red,
+        }}
+      >
+        <Text
+          ellipsizeMode={'tail'}
+          numberOfLines={1}
+          style={
+            fontStyles !== null
+              ? fontStyles
+              : {
+                  fontSize: FontSize.x4large,
+                  color: AppColors.white,
+                  fontFamily: AppFonts.CalibriBold,
+                }
+          }
+        >
+          {title}
+        </Text>
+        <HoriSpace size={Spacing.large} />
+        <DownArrowIcon size={13}  />
+      </Ripple>
+      <RightContainer />
+    </View>
+  );
+};
 
 

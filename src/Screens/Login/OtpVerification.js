@@ -127,7 +127,7 @@ const navigation=useNavigation()
             InActiveColor='black'
             onPress={() => {
             //   loginMethod(code);
-            navigation.navigate('SettingScreen')
+            navigation.navigate('ProfileScreen')
             }}
           />
         </AppHeader>

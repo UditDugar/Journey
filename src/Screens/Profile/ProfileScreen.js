@@ -24,7 +24,7 @@ import {
 } from '../../shared/Global.styles';
 import {Container} from '../../Components/index';
 import {wp} from '../../shared/dimens';
-import {BioCircleIcon, CameraWhiteIcon, EditIcon} from '../../shared/Icon.Comp';
+import {BioCircleIcon, CameraWhiteIcon, EditIcon, EditWIcon} from '../../shared/Icon.Comp';
 import {ImgSourceCheck} from '../../Components/BioImageView';
 
 export const ProfilePicker = ({
@@ -32,6 +32,7 @@ export const ProfilePicker = ({
   style = {},
   size = wp(180),
   onSelected = () => {},
+  onPress
 }) => {
   const navigation = useNavigation();
 
@@ -40,12 +41,7 @@ export const ProfilePicker = ({
     <View style={{width: size, height: size}}>
       <TouchableOpacity
         activeOpacity={0.9}
-        onPress={() => {
-          navigation.navigate('PhotosList', {
-            pickerType: 'single',
-            routeName: 'ProfileScreen',
-          });
-        }}
+         onPress={onPress}
         style={{...style, position: 'absolute'}}>
         <View>
           {/* <View style={{ backgroundColor: 'red' }}>
@@ -61,7 +57,7 @@ export const ProfilePicker = ({
               borderRadius: size / 2,
               position: 'absolute',
             }}
-            source={{uri: ImgSourceCheck(imageUrlParmas)}}
+            source={{uri: imageUrlParmas}}
             // source={{ uri: `https://picsum.photos/id/1/${size}` }}
           />
           <View style={{position: 'absolute', bottom: 5, right: 0}}>
@@ -72,6 +68,8 @@ export const ProfilePicker = ({
     </View>
   );
 };
+
+
 
 export const GenderOptions = [
   {
@@ -103,14 +101,33 @@ export const CameraButtonWhite = ({size}) => {
   );
 };
 
-export const SettingScreen = () => {
+export const ProfileScreen = ({route}) => {
   const [loading, setLoading] = React.useState(false);
   const [Username, setUsername] = React.useState('');
   const [BirthDate, setBirthDate] = React.useState('');
-  const [imageUri, setimageUri] = React.useState(null);
+  const [imageUri, setImageUri] = React.useState(null);
   const [Gender, setGender] = React.useState({key: 1, text: 'male'});
   const [disable, setDisable] = React.useState(true);
   const navigation = useNavigation();
+  React.useEffect(() => {
+    if (route.params?.imageList) {
+      ImagePicker.openCropper({
+        path: route.params.imageList[0],
+        width: 400,
+        height: 400,
+        cropperCircleOverlay: true,
+        cropperToolbarTitle: 'Crop Photo',
+        cropperActiveWidgetColor: 'white',
+        cropperStatusBarColor: 'black',
+        cropperToolbarColor: 'black',
+        cropperToolbarWidgetColor: 'white',
+      }).then(image => {
+        setImageUri(image.path);
+        console.log(image.path);
+      });
+    }
+  }, [route.params?.imageList]);
+
   return (
     <SafeAreaView style={[GStyles.containerFlex, {backgroundColor: 'black'}]}>
       <AppHeader colorIcon={AppColors.white} enableBack>
@@ -130,7 +147,14 @@ export const SettingScreen = () => {
         <Container padding={Spacing.xxlarge}>
           <View style={{alignItems: 'center'}}>
             {/* <AppButton title="tets" onPress={() => CropPhoto()} /> */}
-            <ProfilePicker imageUrlParmas={imageUri} />
+            <ProfilePicker imageUrlParmas={imageUri} onPress={() => {
+          navigation.navigate('PhotosListScreen', {
+            onReturn: item => {
+              setImageUri(item);
+                // alert(item)
+              },
+          });
+        }}/>
           </View>
 
           <VertSpace size={40} />
@@ -198,8 +222,11 @@ export const SettingScreen = () => {
           </View>
 
           <VertSpace size={Spacing.size40} />
-          <Label title={'Gender'} />
+          <Label1 title={'Gender'} />
           <SelectableRadioButton
+          ContainerWidth={125}
+          buttonWidth={100}
+          paddingHorizontal={10}
             data={GenderOptions}
             onSelected={value => {
               setGender(value), setDisable(false);
@@ -244,12 +271,47 @@ export const Label = ({title = 'Title', required = false, onPress}) => {
         </Text>
       ) : (
         <Text onPress={onPress}>
-          <EditIcon size={16} />
+          <EditWIcon   size={16} />
         </Text>
       )}
     </View>
   );
 };
+
+
+export const Label1 = ({title = 'Title', required = false, onPress}) => {
+  return (
+    <View
+      style={{
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        // backgroundColor: 'wheat',
+      }}>
+      <Text
+        style={{
+          color: AppColors.MediumGrey,
+          fontFamily: AppFonts.CalibriBold,
+          fontSize: FontSize.large,
+          lineHeight: FontSize.large,
+        }}>
+        {title}
+      </Text>
+
+      {required ? (
+        <Text
+          style={{
+            color: AppColors.Red,
+            fontFamily: AppFonts.CalibriBold,
+            fontSize: FontSize.large,
+            lineHeight: FontSize.large,
+          }}>
+          *
+        </Text>
+      ) : null}
+    </View>
+  );
+};
+
 
 const styles = StyleSheet.create({
   textInputContainer: {
