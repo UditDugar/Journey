@@ -9,27 +9,44 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {AppHeader} from '../../Components/AppHeader';
+import {AppHeader, DropdownHeader} from '../../Components/AppHeader';
 import {AppColors} from '../../assets/AppColors';
 import {Container} from '../../Components';
 import {useNavigation} from '@react-navigation/native';
+import {VertSpace} from '../../shared/Global.styles';
+
+export const getPhotosFromAlbum = (groupname = '', after = '0', first = 20) => {
+  return CameraRoll.getPhotos({
+    first: first == 0 ? 20 : first,
+    after: after,
+    assetType: 'Photos',
+    groupTypes: 'Album',
+    groupName: groupname,
+  }).then(response => {
+    return response;
+  });
+};
 
 export const PhotosList = ({route}) => {
+  // const {selectedGroup}=route.params
+
   const [PhotosList, setPhotosList] = React.useState([]);
   const [albumList, setAlbumList] = React.useState([]);
-  const [albumName, setAlbumName] = React.useState('');
-  //   useEffect(() => {
-  //     getPhotos('');
-  //     getAllAlbumData();
-  //   }, []);
-
-  const [visible, setIsVisible] = React.useState([]);
-
+  const [AlbumName, setAlbumName] = React.useState('All');
+  const endCursorRef = React.useRef('0');
+  const [PhotoCount, setPhotoCount] = React.useState(2000);
+  const [GalleryImages, setGalleryImages] = React.useState([]);
   useEffect(() => {
     checkPermission().then(() => {
-      getPhotos();
+      getAllAlbumData(),
+        getPhotos(),
+        getPhotosFromAlbum(AlbumName, '0', PhotoCount).then(response => {
+          setGalleryImages(response.edges);
+          endCursorRef.current = '0';
+          console.log(response.edges);
+        });
     });
-  }, []);
+  }, [PhotoCount]);
   const checkPermission = async () => {
     const hasPermission = await PermissionsAndroid.check(
       PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
@@ -67,7 +84,7 @@ export const PhotosList = ({route}) => {
   const getAllAlbumData = () => {
     CameraRoll.getAlbums({assetType: 'Photos'}).then(response => {
       setAlbumList(response);
-      console.log(response);
+      // console.log(response);
     });
   };
   const navigation = useNavigation();
@@ -75,48 +92,90 @@ export const PhotosList = ({route}) => {
   return (
     <View style={{flex: 1, backgroundColor: '#161616'}}>
       <AppHeader enableBack colorIcon={AppColors.white} />
-      <Text
-        style={{
-          fontWeight: '900',
-          color: 'white',
-          fontSize: 30,
-          marginLeft: 30,
-          marginBottom: 30,
-        }}>
-        Gallery
-      </Text>
-      <FlatList
-        key={'_'}
-        keyExtractor={(_, index) => index.toString()}
-        data={PhotosList}
-        numColumns={3}
-        renderItem={({item, index}) => {
-          return (
-            <TouchableOpacity
-              onPress={() => {route.params.onReturn(item.image.uri), navigation.goBack();
-}}
-              style={{
-                justifyContent: 'center',
-                alignItems: 'center',
-                flex: 1,
-                margin: 10,
-              }}>
-              <Image
-                key={index}
-                style={{
-                  width: 80,
-                  height: 80,
-                  resizeMode: 'cover',
-                  borderRadius: 10,
-                  borderWidth: 2,
-                  borderColor: '#1ACA7E',
+      <Container>
+        <DropdownHeader
+          onHeaderPress={() => {
+            navigation.navigate('AlbumList', {
+              albumData: albumList,
+              onReturn: item => {
+                setAlbumName(item.title), setPhotoCount(item.count);
+              },
+            });
+          }}
+          title={AlbumName === 'All' ? 'All' : AlbumName}
+        />
+
+        <VertSpace size={40} />
+
+        <FlatList
+          key={'_'}
+          keyExtractor={(_, index) => index.toString()}
+          data={GalleryImages}
+          numColumns={3}
+          renderItem={({item, index}) => {
+            return (
+              <TouchableOpacity
+                onPress={() => {
+                  route.params.onReturn(item.node.image.uri),
+                    navigation.goBack();
                 }}
-                source={{uri: item.image.uri}}
-              />
-            </TouchableOpacity>
-          );
-        }}
-      />
+                style={{
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  flex: 1,
+                  margin: 10,
+                }}>
+                <Image
+                  style={{
+                    width: 80,
+                    height: 80,
+                    resizeMode: 'cover',
+                    borderRadius: 10,
+                    borderWidth: 2,
+                    borderColor: AppColors.green,
+                  }}
+                  source={{uri: item.node.image.uri}}
+                />
+              </TouchableOpacity>
+            );
+          }}
+        />
+        {AlbumName === 'All' ? (
+          <FlatList
+            key={'_'}
+            keyExtractor={(_, index) => index.toString()}
+            data={PhotosList}
+            numColumns={3}
+            renderItem={({item, index}) => {
+              return (
+                <TouchableOpacity
+                  onPress={() => {
+                    route.params.onReturn(item.image.uri), navigation.goBack();
+                  }}
+                  style={{
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    flex: 1,
+                    margin: 10,
+                  }}>
+                  <Image
+                    key={index}
+                    style={{
+                      width: 80,
+                      height: 80,
+                      resizeMode: 'cover',
+                      borderRadius: 10,
+                      borderWidth: 2,
+                      borderColor: AppColors.green,
+                    }}
+                    source={{uri: item.image.uri}}
+                  />
+                </TouchableOpacity>
+              );
+            }}
+          />
+        ) : null}
+      </Container>
     </View>
   );
 };

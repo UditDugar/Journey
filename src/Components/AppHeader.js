@@ -2,9 +2,11 @@ import {useNavigation} from '@react-navigation/native';
 import React from 'react';
 
 import {View, Text, Pressable} from 'react-native';
+import Ripple from 'react-native-material-ripple';
 import {AppColors} from '../assets/AppColors';
-import {GStyles, Spacing} from '../shared/Global.styles';
-import {BackArrowIcon} from '../shared/Icon.Comp';
+import { AppFonts } from '../assets/fonts/AppFonts';
+import {AppDimens, FontSize, GStyles, HoriSpace, Spacing} from '../shared/Global.styles';
+import {BackArrowIcon, DownArrowIcon} from '../shared/Icon.Comp';
 
 export const AppHeader = ({
   padding = Spacing.large,
@@ -83,6 +85,56 @@ export const ModalHeader = ({
         </Pressable>
       ) : null}
       <View style={{paddingHorizontal: 0}}>{children}</View>
+    </View>
+  );
+};
+
+export const DropdownHeader = ({
+  title = 'Header',
+  RightContainer = () => null,
+  onHeaderPress = () => {},
+  fontStyles = null,
+}) => {
+  return (
+    <View
+      style={{
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        // backgroundColor: AppColors.green,
+      }}
+    >
+      <Ripple
+        onPress={() => onHeaderPress()}
+        rippleContainerBorderRadius={20}
+        rippleFades={true}
+        style={{
+          width: AppDimens.width * 0.6,
+          flexDirection: 'row',
+          alignItems: 'center',
+          paddingRight: 10,
+          // backgroundColor: AppColors.Red,
+        }}
+      >
+        <Text
+          ellipsizeMode={'tail'}
+          numberOfLines={1}
+          style={
+            fontStyles !== null
+              ? fontStyles
+              : {
+                  fontSize: FontSize.x4large,
+                  color: AppColors.white,
+                  fontFamily: AppFonts.CalibriBold,
+                }
+          }
+        >
+          {title}
+        </Text>
+        <HoriSpace size={Spacing.large} />
+        <DownArrowIcon size={13} />
+      </Ripple>
+      <RightContainer />
     </View>
   );
 };

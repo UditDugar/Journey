@@ -1,20 +1,28 @@
-import React from 'react';
-import {StyleSheet, Text, Touchable, View} from 'react-native';
+import React, {useState} from 'react';
+import {
+  FlatList,
+  Image,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+import AsyncStorage from '@react-native-community/async-storage';
+
 import {AppColors} from '../../assets/AppColors';
 import {AppHeader} from '../../Components/AppHeader';
-import {Container} from '../../Components/index';
-import {FontSize, Spacing, VertSpace} from '../../shared/Global.styles';
+import {FontSize, VertSpace} from '../../shared/Global.styles';
 import * as Progress from 'react-native-progress';
-import {CalenderIcon, CalenderViewIcon} from '../../shared/Icon.Comp';
-import {FlatList, TouchableOpacity} from 'react-native-gesture-handler';
+import {
+  CalenderIcon,
+  EditIcon,
+  GalleryIcon,
+  NotesIcon,
+} from '../../shared/Icon.Comp';
 import {useNavigation} from '@react-navigation/native';
-import {Calendar, CalendarList, WeekCalendar} from 'react-native-calendars';
 import moment from 'moment';
-
-const dates = [
-  1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22,
-  23, 24, 26, 27, 28, 29, 30, 31,
-];
+import {ScrollView} from 'react-native-gesture-handler';
+import {Container} from '../../Components';
 
 export const HorizontalLine = ({
   height = 1,
@@ -25,6 +33,7 @@ export const HorizontalLine = ({
   marginRight,
   marginTop,
   marginLeft,
+  marginBottom,
 }) => {
   return (
     <View
@@ -37,6 +46,7 @@ export const HorizontalLine = ({
         marginRight: marginRight,
         marginTop: marginTop,
         marginLeft: marginLeft,
+        marginBottom: marginBottom,
       }}></View>
   );
 };
@@ -73,7 +83,7 @@ export const MonthString = ({MonthIndex}) => {
   );
 };
 
-const CalenderView = ({onPress, date = 3, month = 'Jan'}) => {
+const CalenderView = ({onPress, date = 3, month = 'Jan', year = '2022'}) => {
   return (
     <TouchableOpacity style={{flexDirection: 'row'}}>
       <View style={styles.square}>
@@ -96,7 +106,7 @@ const CalenderView = ({onPress, date = 3, month = 'Jan'}) => {
               fontWeight: '700',
               color: 'white',
             }}>
-            {month}, {date}
+            {month}, {year}
           </Text>
         </View>
       </View>
@@ -115,7 +125,12 @@ const CalenderView = ({onPress, date = 3, month = 'Jan'}) => {
     </TouchableOpacity>
   );
 };
-const Box = ({progress = 0.5, color = 'green', title = 'Sleep'}) => {
+const Box = ({
+  progress = 0.5,
+  color = 'green',
+  title = 'Sleep',
+  progressDate = '50%',
+}) => {
   return (
     <View style={{justifyContent: 'center', alignItems: 'center'}}>
       <Progress.Bar
@@ -133,15 +148,15 @@ const Box = ({progress = 0.5, color = 'green', title = 'Sleep'}) => {
           justifyContent: 'center',
           alignItems: 'center',
         }}>
-        <Text style={styles.progressText}>50%</Text>
+        <Text style={styles.progressText}>{progressDate}</Text>
         <Text style={{color: 'black'}}>{title}</Text>
       </View>
     </View>
   );
 };
 
-export const JourneyScreen = ({route}) => {
-  const navigation = useNavigation();
+export const JourneyScreen = ({navigation}) => {
+  const [notes, setNotes] = React.useState('');
 
   const stringValueDate = (date, month, year) => {
     var dateString = `${date}`,
@@ -159,68 +174,147 @@ export const JourneyScreen = ({route}) => {
   );
 
   const newDate = state.split('-');
-
   return (
     <View style={{flex: 1, backgroundColor: '#161616'}}>
-      <AppHeader colorIcon={AppColors.white} enableBack />
+      <AppHeader colorIcon={AppColors.white} enableBack>
+        <Text
+          style={{color: 'white'}}
+          onPress={() =>
+            navigation.navigate('MonthPicker', {
+              onReturn: item => setState(item),
+            })
+          }>
+          <CalenderIcon size={25} />
+        </Text>
+      </AppHeader>
+      <ScrollView>
+        <VertSpace size={25} />
+        <View
+          style={{
+            justifyContent: 'center',
+            alignItems: 'center',
+            width: '100%',
+            paddingLeft: 20,
+          }}>
+          <CalenderView
+            date={newDate[2]}
+            month={<MonthString MonthIndex={newDate[1]} />}
+            year={newDate[0]}
+          />
+        </View>
 
-      <VertSpace size={25} />
-      <View
-        style={{justifyContent: 'center', alignItems: 'center', width: '100%'}}>
-        <CalenderView
-          date={newDate[2]}
-          month={<MonthString MonthIndex={newDate[1]} />}
-        />
-      </View>
+        <VertSpace size={60} />
+        <View style={{flexDirection: 'row', justifyContent: 'space-evenly'}}>
+          <Box progress={0.5} color="#18E670" />
+          <Box progress={1} color="#4AA9E9" title="Read" progressDate="100%" />
+        </View>
+        <VertSpace size={50} />
 
-      <VertSpace size={60} />
-      <View style={{flexDirection: 'row', justifyContent: 'space-evenly'}}>
-        <Box progress={0.12} color="#18E670" />
-        <Box progress={0.22} color="#4AA9E9" title="Read" />
-      </View>
-      <VertSpace size={50} />
+        <View style={{flexDirection: 'row', justifyContent: 'space-evenly'}}>
+          <Box
+            progress={0.1}
+            color="#E61841"
+            title="Gossip"
+            progressDate="1%"
+          />
+          <Box progress={0.7} color="#E9D54A" title="Eat" progressDate="70%" />
+        </View>
+        <VertSpace size={50} />
+        <Container>
+          <View
+            style={[
+              styles.imageScroll,
+              {
+                backgroundColor: AppColors.LightGrey,
+                height: 150,
+             
+                alignItems: 'center',
+              },
+            ]}>
+            <ScrollView horizontal>
+              <Image
+                source={{uri: 'https://reactjs.org/logo-og.png'}}
+                style={{
+                  width: 100,
+                  height: 100,
+                  borderRadius: 10,
+                }}
+                resizeMode="cover"
+              />
+                            <Image
+                source={{uri: 'https://reactjs.org/logo-og.png'}}
+                style={{
+                  width: 100,
+                  height: 100,
+                  borderRadius: 10,
+                }}
+                resizeMode="cover"
+              />
+                            <Image
+                source={{uri: 'https://reactjs.org/logo-og.png'}}
+                style={{
+                  width: 100,
+                  height: 100,
+                  borderRadius: 10,
+                }}
+                resizeMode="cover"
+              />
+                            <Image
+                source={{uri: 'https://reactjs.org/logo-og.png'}}
+                style={{
+                  width: 100,
+                  height: 100,
+                  borderRadius: 10,
+                }}
+                resizeMode="cover"
+              />
+            </ScrollView>
+          </View>
+          <VertSpace size={50} />
 
-      <View style={{flexDirection: 'row', justifyContent: 'space-evenly'}}>
-        <Box progress={0.32} color="#E61841" title="Gossip" />
-        <Box progress={0.42} color="#E9D54A" title="Eat" />
-      </View>
+          <View style={[styles.Notes, {height: 100}]}>
+            <Text style={{color: AppColors.white, fontSize: FontSize.large}}>
+              {notes}{' '}
+            </Text>
+          </View>
+        </Container>
+
+        <VertSpace size={100} />
+      </ScrollView>
 
       <View
         style={{
           position: 'absolute',
           bottom: 0,
-          borderTopWidth: 0.5,
-          borderColor: 'white',
-          height: 90,
-          justifyContent: 'center',
+          backgroundColor: '#161616',
+          height: 60,
+          width: '100%',
+          justifyContent: 'flex-end',
           alignItems: 'center',
-          paddingTop: 20,
+          flexDirection: 'row',
+          paddingRight: 20,
         }}>
-        <FlatList
-          data={dates}
-          horizontal
-          renderItem={({item}) => (
-            <View
-              style={{
-                flex: 1,
-                flexDirection: 'column',
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}>
-              {/* style={styles.circle}
-                onPress={() => alert('Abhaya')}> */}
-              <Text
-                onPress={() => alert('Abhaya')}
-                style={[styles.dates, styles.circle]}>
-                {item}
-              </Text>
+        <TouchableOpacity
+          style={{paddingRight: 20, color: 'white'}}
+          onPress={() =>
+            navigation.navigate('NotesScreen', {
+              onReturn: item => {
+                setNotes(item);
+              },
+            })
+          }>
+          <NotesIcon size={30} />
+          <Text style={{color: 'white', fontSize: FontSize.shorter}}>
+            Notes
+          </Text>
+        </TouchableOpacity>
 
-              <Text style={[styles.dates, {paddingLeft: 14}]}>
-                <MonthString MonthIndex={newDate[1]} />
-              </Text>
-            </View>
-          )}
-        />
+        <TouchableOpacity onPress={() => navigation.navigate('GalleryScreen')}>
+          <GalleryIcon color="white" size={30} />
+          <Text style={{color: 'white', fontSize: FontSize.shorter}}>
+            Photos
+          </Text>
+        </TouchableOpacity>
       </View>
     </View>
   );
@@ -265,18 +359,6 @@ const styles = StyleSheet.create({
   },
   dates: {
     color: 'white',
-    fontSize: FontSize.medium,
-  },
-  circle: {
-    width: 50,
-    height: 50,
-    borderWidth: 0.7,
-    borderColor: 'white',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginLeft: 20,
-    borderRadius: 50,
-    textAlign:"center",
-    paddingTop:15
+    fontSize: FontSize.shorter,
   },
 });

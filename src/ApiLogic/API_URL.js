@@ -1,12 +1,12 @@
 // export
 const PROD_URL = 'https://app.memofac.in/api';
 const DEV_URL = 'https://memofac.devclub.co.in/api';
-const BASE_URL = PROD_URL;
+const BASE_URL = 'https://abhaya-barsa.herokuapp.com';
 
 export const APP_APIS = {
   BASE_URL: BASE_URL,
-  SEND_OTP: BASE_URL + '/send_otp',
-  LOGIN: BASE_URL + '/login',
+  SEND_OTP: BASE_URL + '/request',
+  LOGIN: BASE_URL + '/verify',
   REGISTER: BASE_URL + '/register',
   LOGOUT: BASE_URL + '/logout',
 

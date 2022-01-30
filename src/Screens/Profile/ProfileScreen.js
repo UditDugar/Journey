@@ -1,5 +1,4 @@
 import {
-  AsyncStorage,
   ScrollView,
   StyleSheet,
   Text,
@@ -8,6 +7,9 @@ import {
   TextInput,
   Image,
 } from 'react-native';
+import AsyncStorage from '@react-native-community/async-storage';
+
+
 import {useNavigation} from '@react-navigation/native';
 import OTPInputView from '@twotalltotems/react-native-otp-input';
 import React, {useState} from 'react';
@@ -128,6 +130,7 @@ export const ProfileScreen = ({route}) => {
     }
   }, [route.params?.imageList]);
 
+  
   return (
     <SafeAreaView style={[GStyles.containerFlex, {backgroundColor: 'black'}]}>
       <AppHeader colorIcon={AppColors.white} enableBack>

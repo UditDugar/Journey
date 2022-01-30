@@ -4,11 +4,7 @@ import {StyleSheet, Text, View, TextInput, FlatList} from 'react-native';
 import {AppColors} from '../../assets/AppColors';
 import {AccentButton, Container} from '../../Components';
 import {AppHeader} from '../../Components/AppHeader';
-import {
-  FontSize,
-  Spacing,
-  VertSpace,
-} from '../../shared/Global.styles';
+import {FontSize, Spacing, VertSpace} from '../../shared/Global.styles';
 import {HorizontalLine} from '../Journey/JourneyScreen';
 const Activities = [
   {
@@ -148,15 +144,10 @@ export const ActivityList = ({route, navigation}) => {
         <VertSpace size={50} />
         <FlatList
           data={search}
-          // ItemSeparatorComponent={()=>{
-          //   return(
-          //     <HorizontalLine marginLeft={30} height={0.7} backgroundColor='gray' width='50%'  alignItems='center'/>
-          //   )
-          // }}
+
           keyExtractor={item => item.key}
           renderItem={({item}) => (
             <View style={{flex: 1}}>
-
               <Text
                 style={styles.item}
                 onPress={() => {
@@ -166,7 +157,13 @@ export const ActivityList = ({route, navigation}) => {
               </Text>
               <VertSpace size={10} />
 
-              <HorizontalLine marginLeft={10} height={0.7} backgroundColor='gray' width='50%'  alignItems='center'/>
+              <HorizontalLine
+                marginLeft={10}
+                height={0.7}
+                backgroundColor="gray"
+                width="50%"
+                alignItems="center"
+              />
 
               <VertSpace size={10} />
             </View>
@@ -194,7 +191,6 @@ const styles = StyleSheet.create({
   item: {
     color: 'white',
     fontSize: FontSize.large,
-    paddingLeft:0,
-  
+    paddingLeft: 0,
   },
 });

@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {Text, TextInput, TouchableOpacity, View, Button} from 'react-native';
+import {Keyboard, Text, TextInput, TouchableOpacity, View} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {
   AppDimens,
@@ -17,6 +17,7 @@ import Country2 from '../../assets/svg/Flags/Country2.svg';
 import Ripple from 'react-native-material-ripple';
 import {Modal, Portal} from 'react-native-paper';
 import auth from '@react-native-firebase/auth';
+import DeviceInfo from 'react-native-device-info';
 
 import {wp} from '../../shared/dimens';
 import {ScreenLoader} from '../../Components/ScreenLoader';
@@ -24,13 +25,17 @@ import {Container, NextButton} from '../../Components';
 import {AppHeader, ModalHeader} from '../../Components/AppHeader';
 import {DownArrowIcon} from '../../shared/Icon.Comp';
 import {useNavigation} from '@react-navigation/native';
+import {SendOtpAPiCall} from '../../ApiLogic/Auth.Api';
+import {showToast} from '../../shared/Functions/ToastFunctions';
+import {API_TYPE, APP_APIS} from '../../ApiLogic/API_URL';
+import axios from 'axios';
 
 let CountryData = {
   india: {
     key: 'India',
     value: 'India (IN)',
     dropdownData: 'India (+91)',
-    countrCode: '+91',
+    countrCode: '91',
     limit: 10,
   },
 
@@ -38,14 +43,13 @@ let CountryData = {
     key: 'UAE',
     value: 'United Arab Emirates (UAE)',
     dropdownData: 'UAE (+971)',
-    countrCode: '+971',
+    countrCode: '971',
     limit: 9,
   },
 };
 
 export function LoginScreen() {
   const [loading, setLoading] = React.useState(false);
-  const [contactPermVisible, setContactPermVisible] = React.useState(false);
   const [MobileNumber, setMobileNumber] = React.useState('');
   const [countryOptionsVisible, setcountryOptionsVisible] =
     React.useState(false);
@@ -58,32 +62,88 @@ export function LoginScreen() {
   )}-${MobileNumber.substring(3, 6)}-${MobileNumber.substring(6, 10)}`;
   const navigation = useNavigation();
 
-  const [confirm, setConfirm] = useState(null);
+  
+  // const SendOtpMethod = async (MobileNumber, countryCode) => {
+  //   // let formData = new FormData();
+  //   // formData.append('number', countryCode+MobileNumber);
+  //   // formData.append('country_code', countryCode);
+  //   // console.log(formData);
+  //   console.log({number: countryCode + MobileNumber});
 
-  const [code, setCode] = useState('');
+  //   axios
+  //     .post('https://abhaya-barsa.herokuapp.com/request', {
+  //       number: 919348557381,
+  //     })
+  //     .then(function (response) {
+  //       console.log(response.data.requestId);
+  //       setLoading(false);
+  //       navigation.navigate('OtpVerificationScreen', {
+  //         countryCode,
+  //         MobileNumber,
+  //         formattedMobileNumber,
+  //         response,
+  //       });
+  //     });
 
-  // Handle the button press
-  async function signInWithPhoneNumber(phoneNumber) {
-    const confirmation = await auth().signInWithPhoneNumber(phoneNumber);
-    setConfirm(confirmation);
-    console.log(confirmation);
-  }
+  //   // await fetch('https://abhaya-barsa.herokuapp.com/request', {
+  //   //   method: 'POST',
+  //   //   headers: {
+  //   //     'Accept': 'application/json',
+  //   //     'Content-Type': 'application/json'
+  //   //   },
+  //   //   body: {"number":919348557381},
 
-  async function confirmCode() {
-    try {
-      const data = await confirm.confirm(code);
-      console.log(data);
-    } catch (error) {
-      console.log('Invalid code.');
-    }
-  }
+  //   // })
+  //   //   .then(res => {
+  //   //     showToast('You will receive an OTP shortly');
+  //   //     setLoading(false);
+  //   //     console.log(res);
+  //   //     navigation.navigate('OtpVerificationScreen', {
+  //   //       countryCode,
+  //   //       MobileNumber,
+  //   //       formattedMobileNumber,
+  //   //       res,
+  //   //     });
+  //   //   })
+  //   //   .catch(error => {
+  //   //     console.log(error),
+  //   //       setLoading(false),
+  //   //       showToast('Wrong OTP, try again');
+  //   //   });
 
+  //   // SendOtpAPiCall(
+
+  //   //   onResponse => {
+  //   //     console.log(onResponse);
+  //   //     if (onResponse.statusCode == 200) {
+  //   //       showToast('You will receive an OTP shortly');
+  //   //       setLoading(false);
+  //   //       navigation.navigate('OtpVerificationScreen', {
+  //   //         countryCode,
+  //   //         MobileNumber,
+  //   //         formattedMobileNumber
+  //   //       });
+  //   //     } else showToast('Wrong OTP, try again');
+  //   //   },
+  //   //   onError => {
+  //   //     setLoading(false);
+  //   //   },
+  //   // )
+  // };
+  const setLoginLocal = async (loginData) => {
+
+    const uniqueId = DeviceInfo.getUniqueId();
+    // const fcmToken = await firebase.messaging().getToken();
+
+    console.log({ uniqueId, platform: Platform.OS });
+    
+  };
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: AppColors.white}}>
       <ScreenLoader message="loading wait..." loading={loading} />
       <View style={[GStyles.wallpaperBackground, {backgroundColor: 'black'}]}>
         {/* APP HEADER */}
-        <AppHeader enableBack colorIcon={'white'}>
+        <AppHeader colorIcon={'white'}>
           <NextButton
             disabled={
               MobileNumber.length < CountryData[Country].limit ? true : false
@@ -91,7 +151,8 @@ export function LoginScreen() {
             onPress={() => {
               // setLoading(true);
               // SendOtpMethod(MobileNumber, countryCode);
-              navigation.navigate('OtpVerificationScreen');
+              setLoginLocal()
+              navigation.navigate('OtpVerificationScreen',{number:countryCode+MobileNumber});
             }}
           />
         </AppHeader>
@@ -122,6 +183,7 @@ export function LoginScreen() {
           <TextInput
             placeholderTextColor={AppColors.white}
             autoFocus
+            onFocus={()=> Keyboard.addListener()}
             style={{
               // width: '100%',
               paddingHorizontal: 40,

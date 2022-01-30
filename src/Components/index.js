@@ -146,7 +146,7 @@ export const SelectableRadioButton=({
                   backgroundColor:
                     value === res.key
                       ? '#C4C0C0'
-                      : '#707070',
+                      : '#524848',
                   
                   paddingVertical: 10,
                   paddingHorizontal:paddingHorizontal,

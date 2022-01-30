@@ -32,15 +32,11 @@ export const stringValueDate = (date, month, year) => {
 
 // MONTH PICKER
 export const MonthPicker = ({route}) => {
-
   const [YearSelected, setYearSelected] = React.useState(
     new Date().getFullYear(),
   );
   const [MonthIndex, setMonthIndex] = React.useState(0);
   const navigation = useNavigation();
-
-
-
 
   const [MonthSelected, setMonthSelected] = React.useState(
     new Date().getMonth(),
@@ -51,22 +47,23 @@ export const MonthPicker = ({route}) => {
 
   const ABHAYA = '2000-00-02';
   const maxDate = new Date(YearSelected, MonthSelected, 1);
-
+const MM='MM'
   //  alert(ABHAYA.length);
   const [selectedStartDate, setSelectedStartDate] = React.useState(null);
-  const startDate = selectedStartDate
-    ? selectedStartDate.format('YYYY-MM-DD').toString()
-    : '';
+  const startDate = selectedStartDate ? selectedStartDate : '';
   return (
     <SafeAreaView style={{backgroundColor: '#161616', flex: 1}}>
       <AppHeader colorIcon={AppColors.white} enableBack>
-        <NextButton title="Done" 
-        disabled={false}
-          onPress={()=> {route.params.onReturn(startDate), navigation.goBack()}}
-        />
+        {/* <NextButton
+          title="Done"
+          disabled={false}
+          onPress={() => {
+            route.params.onReturn(startDate), navigation.goBack();
+          }}
+        /> */}
       </AppHeader>
-      <HoriSpace size={20} />
-      <Container>
+      <VertSpace size={70} />
+      {/* <Container>
         <DropdownHeader
           fontStyles={styles.yearStyles}
           title={YearSelected}
@@ -123,30 +120,63 @@ export const MonthPicker = ({route}) => {
             );
           })}
         </ScrollView>
-      </Container>
+      </Container> */}
 
-      <CalendarPicker
-        initialDate={maxDate}
-        onDateChange={setSelectedStartDate}
-        selectedRangeEndTextStyle={{color: 'red'}}
-        // todayBackgroundColor="#f2e6ff"
-        selectedDayColor="#fff"
-        selectedDayStyle={{backgroundColor: '#fff'}}
-        selectedDayTextColor="#161616"
-        textStyle={{color: 'white'}}
-        previousTitle=" "
-        nextTitle=" "
-        todayBackgroundColor={AppColors.green}
-        scaleFactor={375}
-          textStyle={{
-            fontFamily: 'Cochin',
-            color: '#fff',
-          }}
+      <CalendarList
+        horizontal
+        pagingEnabled
+        futureScrollRange={12}
+        
+        current={maxDate}
+        onDayPress={day => {
+          setSelectedStartDate(day.dateString),
+          route.params.onReturn(day.dateString), navigation.goBack()
+        }}
+        markingType="multi-period"
+        markedDates={{
+          '2022-01-01': {
+            periods: [{startingDay: false, endingDay: true, color: '#5f9ea0'}],
+          },
+          '2022-01-02': {
+            periods: [
+              {startingDay: true, endingDay: false, color: '#ffa500'},
+              {color: 'transparent'},
+            ]
+          }
+   
+        }}
+        
+        theme={{
+          textDayFontFamily: AppFonts.CalibriBold,
+          calendarBackground: '#161616',
+          textSectionTitleDisabledColor: '#d9e1e8',
+          selectedDayTextColor: AppColors.DarkGrey,
+          todayTextColor: AppColors.VeryDarkGrey,
+          dayTextColor: AppColors.white,
+          monthTextColor: AppColors.green,
+          indicatorColor: AppColors.LightGrey,
+          textMonthFontWeight:'900',
+          textMonthFontSize:FontSize.xxlarge,
+          
+        }}
       />
-
-      <Text style={{color: 'white'}}>Birthday: {startDate}</Text>
+      <Text style={{color: 'white', textAlign: 'center', fontWeight: '900'}}>
+        {selectedStartDate}
+      </Text>
     </SafeAreaView>
   );
+};
+
+const AppCalenderTheme = {
+  textDayFontFamily: AppFonts.CalibriBold,
+  calendarBackground: '#161616',
+  textSectionTitleDisabledColor: '#d9e1e8',
+  selectedDayTextColor: AppColors.white,
+  todayTextColor: AppColors.white,
+  dayTextColor: AppColors.white,
+  monthTextColor: AppColors.white,
+  indicatorColor: AppColors.LightGrey,
+  todayBackgroundColor: AppColors.green,
 };
 
 const styles = StyleSheet.create({

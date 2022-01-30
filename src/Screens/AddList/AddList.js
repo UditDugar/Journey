@@ -7,6 +7,9 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import AsyncStorage from '@react-native-community/async-storage';
+
+
 import {Container} from '../../Components/index';
 import {Spacing, VertSpace} from '../../shared/Global.styles';
 import {AddCirecleIcon, AddIcon, BioCircleIcon} from '../../shared/Icon.Comp';
@@ -27,7 +30,7 @@ export const PressableButton = ({title = 'Journey',onPress}) => {
   );
 };
 
-export const AddList = () => {
+export const AddList = ({route}) => {
   const navigation = useNavigation();
   return (
     <View
@@ -51,9 +54,9 @@ export const AddList = () => {
         <VertSpace size={60} />
         <PressableButton onPress={()=> navigation.navigate('JourneyScreen')} />
         <VertSpace size={30} />
-        <PressableButton title="Analytics" />
+        <PressableButton title="Analytics" onPress={()=> navigation.navigate('CalenderScreen')} />
         <VertSpace size={30} />
-        <PressableButton title="Log Out" />
+        <PressableButton title="Log Out" onPress={()=>AsyncStorage.clear()} />
       </Container>
     </View>
   );

@@ -1103,6 +1103,13 @@
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
 
+"@react-native-community/async-storage@^1.12.1":
+  version "1.12.1"
+  resolved "https://registry.yarnpkg.com/@react-native-community/async-storage/-/async-storage-1.12.1.tgz#25f821b4f6b13abe005ad67e47c6f1cee9f27b24"
+  integrity sha512-70WGaH3PKYASi4BThuEEKMkyAgE9k7VytBqmgPRx3MzJx9/MkspwqJGmn3QLCgHLIFUgF1pit2mWICbRJ3T3lg==
+  dependencies:
+    deep-assign "^3.0.0"
+
 "@react-native-community/cameraroll@^4.1.2":
   version "4.1.2"
   resolved "https://registry.yarnpkg.com/@react-native-community/cameraroll/-/cameraroll-4.1.2.tgz#489c6bb6137571540d93c543d5fcf8c652b548ec"
@@ -1249,6 +1256,13 @@
   version "1.5.1"
   resolved "https://registry.yarnpkg.com/@react-native-community/clipboard/-/clipboard-1.5.1.tgz#32abb3ea2eb91ee3f9c5fb1d32d5783253c9fabe"
   integrity sha512-AHAmrkLEH5UtPaDiRqoULERHh3oNv7Dgs0bTC0hO5Z2GdNokAMPT5w8ci8aMcRemcwbtdHjxChgtjbeA38GBdA==
+
+"@react-native-community/datetimepicker@^5.1.0":
+  version "5.1.0"
+  resolved "https://registry.yarnpkg.com/@react-native-community/datetimepicker/-/datetimepicker-5.1.0.tgz#c2e73b6ca375a527e54f0a19b0e4ca42bc8b7382"
+  integrity sha512-DsKmdthZIb1AfuvpPE0iOiw4iQLXUWY3mJEYpGe9iUJt7pOkNnqHk6D95wqg4wjZ2bEBLAPfvndoeWZAjAZKfw==
+  dependencies:
+    invariant "^2.2.4"
 
 "@react-native-community/eslint-config@^3.0.1":
   version "3.0.1"
@@ -1943,6 +1957,13 @@ atob@^2.1.2:
   version "2.1.2"
   resolved "https://registry.yarnpkg.com/atob/-/atob-2.1.2.tgz#6d9517eb9e030d2436666651e86bd9f6f13533c9"
   integrity sha512-Wm6ukoaOGJi/73p/cl2GvLjTI5JM1k/O14isD73YML8StrH/7/lRFgmg8nICZgD3bZZvjwCGxtMOD3wWNAu8cg==
+
+axios@^0.25.0:
+  version "0.25.0"
+  resolved "https://registry.yarnpkg.com/axios/-/axios-0.25.0.tgz#349cfbb31331a9b4453190791760a8d35b093e0a"
+  integrity sha512-cD8FOb0tRH3uuEe6+evtAbgJtfxr7ly3fQjYcMcuPlgkwVS9xboaVIpcDV+cYQe+yGykgwZCs1pzjntcGa6l5g==
+  dependencies:
+    follow-redirects "^1.14.7"
 
 babel-core@^7.0.0-bridge.0:
   version "7.0.0-bridge.0"
@@ -2662,7 +2683,12 @@ data-urls@^2.0.0:
     whatwg-mimetype "^2.3.0"
     whatwg-url "^8.0.0"
 
-dayjs@^1.8.15:
+date-fns@^2.28.0:
+  version "2.28.0"
+  resolved "https://registry.yarnpkg.com/date-fns/-/date-fns-2.28.0.tgz#9570d656f5fc13143e50c975a3b6bbeb46cd08b2"
+  integrity sha512-8d35hViGYx/QH0icHYCeLmsLmMUheMmTyV9Fcm6gvNwdw31yXXH+O85sOBJ+OLnLQMKZowvpKb6FgMIQjcpvQw==
+
+dayjs@^1.10.7, dayjs@^1.8.15, dayjs@^1.8.34:
   version "1.10.7"
   resolved "https://registry.yarnpkg.com/dayjs/-/dayjs-1.10.7.tgz#2cf5f91add28116748440866a0a1d26f3a6ce468"
   integrity sha512-P6twpd70BcPK34K26uJ1KT3wlhpuOAPoMwJzpsIWUxHZ7wpmbdZL/hQqBDfz7hGurYSa5PhzdhDHtt319hL3ig==
@@ -2700,6 +2726,13 @@ dedent@^0.7.0:
   version "0.7.0"
   resolved "https://registry.yarnpkg.com/dedent/-/dedent-0.7.0.tgz#2495ddbaf6eb874abb0e1be9df22d2e5a544326c"
   integrity sha1-JJXduvbrh0q7Dhvp3yLS5aVEMmw=
+
+deep-assign@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/deep-assign/-/deep-assign-3.0.0.tgz#c8e4c4d401cba25550a2f0f486a2e75bc5f219a2"
+  integrity sha512-YX2i9XjJ7h5q/aQ/IM9PEwEnDqETAIYbggmdDB3HLTlSgo1CxPsj6pvhPG68rq6SVE0+p+6Ywsm5fTYNrYtBWw==
+  dependencies:
+    is-obj "^1.0.0"
 
 deep-is@^0.1.3, deep-is@~0.1.3:
   version "0.1.4"
@@ -3486,6 +3519,11 @@ flow-parser@^0.121.0:
   resolved "https://registry.yarnpkg.com/flow-parser/-/flow-parser-0.121.0.tgz#9f9898eaec91a9f7c323e9e992d81ab5c58e618f"
   integrity sha512-1gIBiWJNR0tKUNv8gZuk7l9rVX06OuLzY9AoGio7y/JT4V1IZErEMEq2TJS+PFcw/y0RshZ1J/27VfK1UQzYVg==
 
+follow-redirects@^1.14.7:
+  version "1.14.7"
+  resolved "https://registry.yarnpkg.com/follow-redirects/-/follow-redirects-1.14.7.tgz#2004c02eb9436eee9a21446a6477debf17e81685"
+  integrity sha512-+hbxoLbFMbRKDwohX8GkTataGqO6Jb7jGwpAlwgy2bIz25XtRm7KEzJM76R1WiNT5SwZkX4Y75SwBolkpmE7iQ==
+
 for-in@^0.1.3:
   version "0.1.8"
   resolved "https://registry.yarnpkg.com/for-in/-/for-in-0.1.8.tgz#d8773908e31256109952b1fdb9b3fa867d2775e1"
@@ -4098,6 +4136,11 @@ is-number@^7.0.0:
   version "7.0.0"
   resolved "https://registry.yarnpkg.com/is-number/-/is-number-7.0.0.tgz#7535345b896734d5f80c4d06c50955527a14f12b"
   integrity sha512-41Cifkg6e8TylSpdtTpeLVMqvSBEVzTttHvERD741+pnZ8ANv0004MRL43QKPDlK9cGvNp6NZWZUBlbGXYxxng==
+
+is-obj@^1.0.0:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/is-obj/-/is-obj-1.0.1.tgz#3e4729ac1f5fde025cd7d83a896dab9f4f67db0f"
+  integrity sha1-PkcprB9f3gJc19g6iW2rn09n2w8=
 
 is-plain-object@^2.0.3, is-plain-object@^2.0.4:
   version "2.0.4"
@@ -5041,7 +5084,7 @@ lodash.throttle@^4.1.1:
   resolved "https://registry.yarnpkg.com/lodash.throttle/-/lodash.throttle-4.1.1.tgz#c23e91b710242ac70c37f1e1cda9274cc39bf2f4"
   integrity sha1-wj6RtxAkKscMN/HhzaknTMOb8vQ=
 
-lodash@^4.17.10, lodash@^4.17.14, lodash@^4.17.15, lodash@^4.17.21, lodash@^4.7.0:
+lodash@^4.17.10, lodash@^4.17.14, lodash@^4.17.15, lodash@^4.17.21, lodash@^4.17.4, lodash@^4.7.0:
   version "4.17.21"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.21.tgz#679591c564c3bffaae8454cf0b3df370c3d6911c"
   integrity sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==
@@ -5490,7 +5533,7 @@ mkdirp@^0.5.1:
   dependencies:
     minimist "^1.2.5"
 
-moment@2.29.1, moment@>=2.0.0, moment@^2.24.0, moment@^2.29.1:
+moment@2.29.1, moment@>=2.0.0, moment@^2.18.1, moment@^2.24.0, moment@^2.27.0, moment@^2.29.1:
   version "2.29.1"
   resolved "https://registry.yarnpkg.com/moment/-/moment-2.29.1.tgz#b2be769fa31940be9eeea6469c075e35006fa3d3"
   integrity sha512-kHmoybcPV8Sqy59DwNDY3Jefr64lK/by/da0ViFcuA4DH0vQg5Q6Ze5VimxkfQNSC+Mls/Kx53s7TjP1RhFEDQ==
@@ -6085,7 +6128,7 @@ prop-types@15.5.8:
   dependencies:
     fbjs "^0.8.9"
 
-prop-types@^15.5.10, prop-types@^15.6.0, prop-types@^15.6.1, prop-types@^15.6.2, prop-types@^15.7.2:
+prop-types@^15.5.10, prop-types@^15.5.9, prop-types@^15.6.0, prop-types@^15.6.1, prop-types@^15.6.2, prop-types@^15.7.2:
   version "15.8.1"
   resolved "https://registry.yarnpkg.com/prop-types/-/prop-types-15.8.1.tgz#67d87bf1a694f48435cf332c24af10214a3140b5"
   integrity sha512-oj87CgZICdulUohogVAR7AjlC0327U4el4L6eAvOqCeudMDVU0NThNaV+b9Df4dXgSP1gXMTnPdhfe/2qDH5cg==
@@ -6208,10 +6251,10 @@ react-native-calendario@^3.0.1:
     react-dom "16.13.1"
     react-native-month "1.0.5"
 
-react-native-calendars@^1.1275.0:
-  version "1.1275.0"
-  resolved "https://registry.yarnpkg.com/react-native-calendars/-/react-native-calendars-1.1275.0.tgz#09af9ddf4add11c6a8648bd173b1992915a6b81e"
-  integrity sha512-3/3VX1WMUXi6kzsM2HLodLKVKXqiSlxbhhwDt5Ke+WgEVsr5stdyKK4JDZwJKOEEEqlHbRl+AMBgNBmof2/cyw==
+react-native-calendars@^1.1276.0:
+  version "1.1276.0"
+  resolved "https://registry.yarnpkg.com/react-native-calendars/-/react-native-calendars-1.1276.0.tgz#4b0a312b7318ff6dc328f5eb03869f0ea1665922"
+  integrity sha512-+/zK6rlKIhRlNu/VgcG/XiDfteDYWrv0MnxVb6BKpyuTMTgVTfdE+/LJZtMoPXE15zYGcrCwEArVGQvAwJOgKA==
   dependencies:
     hoist-non-react-statics "^3.3.1"
     immutable "^4.0.0-rc.12"
@@ -6219,9 +6262,17 @@ react-native-calendars@^1.1275.0:
     memoize-one "^5.2.1"
     prop-types "^15.5.10"
     react-native-swipe-gestures "^1.0.5"
+    recyclerlistview "^3.0.5"
     xdate "^0.8.0"
   optionalDependencies:
     moment "^2.24.0"
+
+react-native-calendarview-datepicker@^0.0.12:
+  version "0.0.12"
+  resolved "https://registry.yarnpkg.com/react-native-calendarview-datepicker/-/react-native-calendarview-datepicker-0.0.12.tgz#896d6e1c773ff38c6c95cf9af4140c614393a55d"
+  integrity sha512-lqjiJh3TO6sj4vI96x2i9ssUQG62zhlTbmdjn+FNhyMIxQFI2rRTATIOIs8babFIopsccLNkJtSSPcVSSIQLpA==
+  dependencies:
+    moment "^2.27.0"
 
 react-native-codegen@^0.0.7:
   version "0.0.7"
@@ -6232,10 +6283,35 @@ react-native-codegen@^0.0.7:
     jscodeshift "^0.11.0"
     nullthrows "^1.1.1"
 
+react-native-customize-selected-date@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/react-native-customize-selected-date/-/react-native-customize-selected-date-1.0.1.tgz#81226dc3c66c8cf9c973f55b90b78e6df36f2f25"
+  integrity sha512-zGPuRwV0B26sjKSgNIiYoNwGLelHgbehJvGH2HH+awgawDz11y6f+oyOWlQtQ6DFKBHohiDvJK0nbE79+caCEA==
+
 react-native-device-info@^8.4.8:
   version "8.4.8"
   resolved "https://registry.yarnpkg.com/react-native-device-info/-/react-native-device-info-8.4.8.tgz#fc92ae423e47db6cfbf30c30012e09cee63727fa"
   integrity sha512-92676ZWHZHsPM/EW1ulgb2MuVfjYfMWRTWMbLcrCsipkcMaZ9Traz5mpsnCS7KZpsOksnvUinzDIjsct2XGc6Q==
+
+react-native-easy-calendar@^0.3.0:
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/react-native-easy-calendar/-/react-native-easy-calendar-0.3.0.tgz#bd6402424bd8034c7e9dd3a293e48480fdc2909b"
+  integrity sha512-NS/qRI/JKIvml/qDwFsyfd2LgwyZN/+KVIdMdvjq+4HZb1S/3P5SHIm9I7KrpkgXxLyhbAWHtNuBHrGhDYgFgA==
+
+react-native-event-week@^1.0.8:
+  version "1.0.8"
+  resolved "https://registry.yarnpkg.com/react-native-event-week/-/react-native-event-week-1.0.8.tgz#a75c81ab8fa555a3d8147aaa296c5748804c6c39"
+  integrity sha512-n9H2jBoKbXKx/9YrjDatjQtYhbRszEsXsDyguZzZxRNqJbMtrO8ZvzuNHXnMtRx+AEk4s4ZFBXNG7XO3Bq9nUA==
+  dependencies:
+    dayjs "^1.8.34"
+
+react-native-events-calendar@^1.0.8:
+  version "1.0.8"
+  resolved "https://registry.yarnpkg.com/react-native-events-calendar/-/react-native-events-calendar-1.0.8.tgz#e0e15179d025fe1c0ea923308218497c79d65945"
+  integrity sha512-2jMFWaNLA45+6qe230WpxZ1+DtrvlvW8XWCIhUzJ3rejiulKTNrc55QPM+Xm+cpZH2gRGfSykyJwY1XzDZgj/A==
+  dependencies:
+    lodash "^4.17.4"
+    moment "^2.18.1"
 
 react-native-gesture-handler@^2.1.1:
   version "2.1.1"
@@ -6274,6 +6350,13 @@ react-native-month@1.0.5:
   version "1.0.5"
   resolved "https://registry.yarnpkg.com/react-native-month/-/react-native-month-1.0.5.tgz#d39ad8d08485f03c21fb12bac818093120f3ee38"
   integrity sha512-uWpCaxARPY0hSqz+Aty0Xk04wnCUEy4JhgieaL03wi7aTse4Bvt4+B7jWxREGC/ibDip40ZLeBqwXcVHGWgYbA==
+
+react-native-pages@^0.9.0:
+  version "0.9.0"
+  resolved "https://registry.yarnpkg.com/react-native-pages/-/react-native-pages-0.9.0.tgz#1e673eda2e8b64419e69a3dd6688ba4ca3255689"
+  integrity sha512-ea1VNr3KMO4BS2Rpu8T710QbIq16g1sM+ET9IGt559AIHFhqCKB7TeKwyagCA8v5swSpQLWNpTJxp/JB+4mDFQ==
+  dependencies:
+    prop-types "^15.5.9"
 
 react-native-paper@^4.11.1:
   version "4.11.1"
@@ -6454,7 +6537,7 @@ recast@^0.20.3:
     source-map "~0.6.1"
     tslib "^2.0.1"
 
-recyclerlistview@^3.0.0:
+recyclerlistview@^3.0.0, recyclerlistview@^3.0.5:
   version "3.0.5"
   resolved "https://registry.yarnpkg.com/recyclerlistview/-/recyclerlistview-3.0.5.tgz#50bf5bcaa401d56bb6bb264354083f4d424408eb"
   integrity sha512-JVHz13u520faEsbVqFrJOMuJjc4mJlOXODe5QdqAJHdl5/IpyYeo83uiHrpzxyLb8QtJ0889JMlDik+Z1Ed0QQ==

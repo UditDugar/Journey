@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { processResponse } from './Api.Components';
 import { API_TYPE, API_URL, APP_APIS } from './API_URL';
-import request from 'ApiLogic/axios.config';
+import request from './axios.config';
 
 //  FOR SENSING OTP
 export const SendOtpAPiCall = (formData, onResponse, onError) => {
@@ -52,16 +52,16 @@ export const LoginApiCall = (data) => {
   });
 };
 
-export const sendOtpApiCall = (phone, country_code) => {
-  return request({
-    url: APP_APIS.SEND_OTP,
-    method: API_TYPE.POST,
-    data: {
-      country_code,
-      phone,
-    },
-  });
-};
+// export const sendOtpApiCall = (phone, country_code) => {
+//   return request({
+//     url: APP_APIS.SEND_OTP,
+//     method: API_TYPE.POST,
+//     data: {
+//       country_code,
+//       phone,
+//     },
+//   });
+// };
 
 export const LogoutApiCall = (rawData, onResponse, onError) => {
   var myHeaders = new Headers();

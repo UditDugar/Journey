@@ -1,38 +1,18 @@
 import { useNavigation } from '@react-navigation/native';
 import OTPInputView from '@twotalltotems/react-native-otp-input';
+import axios from 'axios';
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, Alert, ActivityIndicator } from 'react-native';
+import AsyncStorage from '@react-native-community/async-storage';
+
+
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { AppColors } from '../../assets/AppColors';
 import { AppFonts } from '../../assets/fonts/AppFonts';
 import { NextButton } from '../../Components';
 import { AppHeader } from '../../Components/AppHeader';
 import { FontSize, GStyles, Spacing, VertSpace } from '../../shared/Global.styles';
-// import { SafeAreaView } from 'react-native-safe-area-context';
-// import { AppColors } from '../../../assets/AppColors';
-// import { FontSize, GStyles, Spacing, VertSpace } from 'shared/Global.styles';
-// import { useDispatch } from 'react-redux';
-// import OTPInputView from '@twotalltotems/react-native-otp-input';
-// import { AppFonts } from 'assets/fonts/AppFonts';
-// import { AppHeader } from 'components/AppHeader';
-// import { useEffect } from 'react';
-// import { AuthContext } from '../../../Navigator/router';
-// import {
-//   LoginApiCall,
-//   sendOtpApiCall,
-//   SendOtpAPiCall,
-// } from '../../../ApiLogic/Auth.Api';
-// import Spinner from '../../../components/Spinner';
-// import { NextButton } from '../../../components/Mini';
-// import Toast from 'react-native-simple-toast';
-// import DeviceInfo from 'react-native-device-info';
-// import { useClipboard } from '@react-native-clipboard/clipboard';
-// import { saveVerifiedNumber } from 'redux/reducers/UserAuth.reducer';
-// import AsyncStorage from '@react-native-async-storage/async-storage';
-// import { STR_KEYS } from 'shared/Storage';
-// import { showToast } from 'shared/Functions/ToastFunctions';
-// import { firebase } from '@react-native-firebase/messaging';
-// import analytics from '@react-native-firebase/analytics';
+
 
 const OTP_INPUT_SIZE = 6;
 
@@ -40,11 +20,20 @@ export function OtpVerification({ route }) {
 //   const [data, setString] = useClipboard();
   const [code, setCode] = React.useState('');
   const [apiLoad, setApiLoad] = React.useState(false);
-//   const { signIn } = React.useContext(AuthContext);
   const [asyncDeviceInfo, setAsyncDeviceInfo] = React.useState({});
-//   const dispatch = useDispatch();
 
-//   const { MobileNumber, countryCode, formattedMobileNumber } = route.params;
+  const { number } = route.params;
+// const loginMethod=async(code)=>{
+//   axios
+//   .post('https://abhaya-barsa.herokuapp.com/verify', {
+//     "code":"1184",
+//     "requestId": response.data.requestId,
+//   })
+//   .then(function (response) {
+//     console.log(response);
+//   });
+
+// }
 
 //   const loginMethod = async OtpCode => {
 //     const { MobileNumber, countryCode } = route.params;
@@ -112,6 +101,15 @@ export function OtpVerification({ route }) {
 //       .catch(error => {});
 //   };
 const navigation=useNavigation()
+
+const setLoginLocal = async () => {
+  try {
+    await AsyncStorage.setItem('loginData', JSON.stringify(number));
+    // alert("stored")
+  } catch (err) {
+    console.log(err);
+  }
+};
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <View style={[GStyles.wallpaperBackground,{backgroundColor:"black"}]}>
@@ -126,7 +124,8 @@ const navigation=useNavigation()
             ActiveColor='white'
             InActiveColor='black'
             onPress={() => {
-            //   loginMethod(code);
+              // loginMethod(code);
+              setLoginLocal()
             navigation.navigate('ProfileScreen')
             }}
           />

@@ -28,7 +28,7 @@ import Gallery from '../assets/svg/Icons/Gallery.svg';
 // OTHER ICOSN
 import Cancel from '../assets/svg/Icons/Cancel.svg';
 import Edit from '../assets/svg/Icons/Edit.svg';
-import EditWhite from '../assets/svg/Icons/EDIT-white.svg';
+import EditWhite from '../assets/svg/Icons/EditWhite.svg';
 
 import Gender from '../assets/svg/Icons/Gender.svg';
 import Avatar from '../assets/svg/Icons/Avatar.svg';
@@ -719,7 +719,7 @@ export const CalenderIcon = ({ size = 30 }) => {
     <Calender
       height={size}
       width={size}
-      style={{ backgroundColor: AppColors.Transparent }}
+      style={{ backgroundColor: AppColors.Transparent}}
     />
   );
 };
