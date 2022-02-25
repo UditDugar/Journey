@@ -1,4 +1,3 @@
-import {useNavigation} from '@react-navigation/native';
 import React, {useEffect, useState} from 'react';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
@@ -8,28 +7,28 @@ import {Container, NextButton, SelectableRadioButton} from '../../Components';
 import {AppHeader} from '../../Components/AppHeader';
 import {AccentButton} from '../../Components/index';
 import {FontSize, Spacing, VertSpace} from '../../shared/Global.styles';
-import {CancelIcon, EditIcon, EditWIcon} from '../../shared/Icon.Comp';
+import {EditWIcon} from '../../shared/Icon.Comp';
 import {Label, Label1} from '../Profile/ProfileScreen';
 import moment from 'moment';
 import {MonthString} from '../Journey/JourneyScreen';
-import DateTimePicker from '@react-native-community/datetimepicker';
-import {TextInput} from 'react-native-gesture-handler';
+import {API_TYPE, APP_APIS} from '../../ApiLogic/API_URL';
+import {PostApiCallWithBody} from '../../ApiLogic/Auth.Api';
 
 export const YesNoOptions = [
   {
     key: '1',
-    text: 'Yes',
+    text: 'yes',
   },
   {
     key: '2',
-    text: 'No',
+    text: 'no',
   },
 ];
 
 export const EnterActivity = ({route, navigation}) => {
   const [item, setItem] = useState(null);
-  const [selector, setSelector] = React.useState({key: 1, text: 'Yes'});
-  const [selector1, setSelector1] = React.useState({key: 1, text: 'Yes'});
+  const [selector, setSelector] = React.useState({key: 1, text: 'yes'});
+  const [selector1, setSelector1] = React.useState({key: 1, text: 'yes'});
   const [disable, setDisable] = React.useState(true);
   const stringValueDate = (date, month, year) => {
     var dateString = `${date}`,
@@ -43,40 +42,84 @@ export const EnterActivity = ({route, navigation}) => {
   const [state, setState] = React.useState(
     stringValueDate(CurrentDate, CurrentMonthIndex + 1, CurrentYear),
   );
-
+  const [asyncDeviceInfo, setAsyncDeviceInfo] = React.useState(null);
   const newDate = state.split('-');
-  const [group, setGroup] = useState('');
-
+  const [user, setUser] = useState(null);
+  // console.log(asyncDeviceInfo.user.token);
+  // console.log(user.user.id);
   const EnterActivities = async () => {
-    if (item === null) {
-      alert('Please add any activities');
-    }else{
-      let obj = {
-        activity: item,
-        imp: selector.key,
-        like: selector1.key,
-        time: TextData,
-      };
-      try {
-        await AsyncStorage.setItem('ActivitiesList', JSON.stringify(obj));
-        // alert("stored")
-        navigation.goBack();
-      } catch (err) {
-        console.log(err);
-      }
-    }
-    
-  };
-  
-  const [TextData, setText] = useState('30');
+    const data = {
+      user_id: user.user.id,
+      activity_id: item.id,
+      activity_date: state,
+      activity_time: `${time.hour}:${time.min}`,
+      is_important: selector.text,
+      is_liked: selector1.text,
+    };
+    const url = 'https://bingehq.com/journey-app/api/add-activity';
 
+    console.log(data);
+    PostApiCallWithBody(
+      APP_APIS.ACTIVITY_ADD,
+      API_TYPE.POST,
+      asyncDeviceInfo.user.token,
+      data,
+    ).then(data => {
+      console.log('message:', data);
+      navigation.goBack()
+    })
+    .catch(error => {
+      console.error('Error:', error);
+    });
+
+    // await fetch(url, {
+    //   method: 'POST', // or 'PUT'
+    //   headers: {
+    //     'Content-Type': 'application/json',
+    //     Authorization: `Bearer ${asyncDeviceInfo.user.token}`,
+    //   },
+    //   body: JSON.stringify(data),
+    // })
+    //   .then(response => response.json())
+    //   .then(async data => {
+    //     console.log('message:', data);
+    //     navigation.goBack()
+    //   })
+    //   .catch(error => {
+    //     console.error('Error:', error);
+    //   });
+  };
+
+  const [time, setTime] = useState({hour: 1, min: 30});
+
+  React.useEffect(() => {
+    retrieveData();
+  }, []);
+  const retrieveData = async () => {
+    try {
+      const value = await AsyncStorage.getItem('UserData');
+      const user = await AsyncStorage.getItem('token');
+      setAsyncDeviceInfo(JSON.parse(user));
+      setUser(JSON.parse(user));
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
     <View style={{backgroundColor: 'black', flex: 1}}>
       <AppHeader colorIcon={AppColors.white} enableBack>
-        <AccentButton title="Submit" onPress={EnterActivities} />
+        <AccentButton
+          title="Submit"
+          disabled={item === null ? true : false}
+          onPress={() => {
+            EnterActivities();
+            //, navigation.goBack();
+          }}
+        />
       </AppHeader>
       <Container padding={Spacing.xxlarge} style={{flex: 1}}>
         <VertSpace size={40} />
+
         <TouchableOpacity
           onPress={() =>
             navigation.navigate('ActivityListScreen', {
@@ -84,6 +127,7 @@ export const EnterActivity = ({route, navigation}) => {
                 setItem(item);
                 // alert(item)
               },
+              token: asyncDeviceInfo.user.token,
             })
           }>
           {item === null ? (
@@ -100,7 +144,7 @@ export const EnterActivity = ({route, navigation}) => {
                   styles.EnterActivity,
                   {color: AppColors.white, maxWidth: 200},
                 ]}>
-                {item}
+                {item.name}
               </Text>
               <Text onPress={() => setItem(null)}>
                 <EditWIcon size={16} />
@@ -119,34 +163,35 @@ export const EnterActivity = ({route, navigation}) => {
           }
         />
         <VertSpace size={10} />
-        <Text style={{color: 'white', fontSize: FontSize.inputText}}>
+        <Text
+          style={{
+            color: 'white',
+            fontSize: FontSize.inputText,
+            fontWeight: '900',
+          }}>
           {newDate[2]}th <MonthString MonthIndex={newDate[1]} />, {newDate[0]}
         </Text>
         <VertSpace size={40} />
-        <Label1 title="Time Duration" onPress={() => alert('Abhaya')} />
+        <Label
+          title="Time Duration"
+          onPress={() =>
+            navigation.navigate('TimePicker', {
+              onReturn: item => {
+                setTime(item), console.log(item);
+              },
+            })
+          }
+        />
         <VertSpace size={10} />
 
         <View style={{flexDirection: 'row', alignItems: 'center'}}>
-          <TextInput
-            placeholder="Enter Time duration"
+          <Text
             style={{
-              borderBottomWidth: 1,
-              borderColor: AppColors.MediumGrey,
-              width: 40,
-              height: 40,
-              color: AppColors.white,
-              fontSize: FontSize.large,
-              paddingBottom: 5,
-            }}
-            placeholderTextColor={AppColors.Blackop1}
-            value={TextData}
-            numberOfLines={1}
-            maxLength={3}
-            onChangeText={text => setText(text)}
-            keyboardType="numeric"
-          />
-          <Text style={{color: 'white', fontSize: FontSize.inputText}}>
-            min
+              color: 'white',
+              fontSize: FontSize.inputText,
+              fontWeight: '900',
+            }}>
+            {time.hour}h {time.min}min
           </Text>
         </View>
         <VertSpace size={40} />

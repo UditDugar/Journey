@@ -8,12 +8,14 @@ import {
   Text,
   TouchableOpacity,
   View,
+  Pressable,
 } from 'react-native';
 import {AppHeader, DropdownHeader} from '../../Components/AppHeader';
 import {AppColors} from '../../assets/AppColors';
-import {Container} from '../../Components';
+import {AccentButton, Container} from '../../Components';
 import {useNavigation} from '@react-navigation/native';
-import {VertSpace} from '../../shared/Global.styles';
+import {VertSpace, AppDimens, GStyles} from '../../shared/Global.styles';
+import CircleCheckBox, {LABEL_POSITION} from 'react-native-circle-checkbox';
 
 export const getPhotosFromAlbum = (groupname = '', after = '0', first = 20) => {
   return CameraRoll.getPhotos({
@@ -27,8 +29,69 @@ export const getPhotosFromAlbum = (groupname = '', after = '0', first = 20) => {
   });
 };
 
-export const PhotosList = ({route}) => {
-  // const {selectedGroup}=route.params
+export const ImageGridView = ({
+  item,
+  imageUrl = null,
+  size = AppDimens.width * 0.25,
+  index,
+  onPress = () => {},
+
+  isSelected = false,
+  selectIconView = true,
+}) => {
+  const [checked, setChecked] = React.useState(isSelected);
+
+  return (
+    <Pressable
+      onPress={() => {
+        onPress(), setChecked(!checked);
+      }}
+      style={{
+        width: size,
+        height: size,
+        backgroundColor: AppColors.Transparent,
+        ...GStyles.containView,
+        margin: 10,
+      }}>
+      {selectIconView ? (
+        <View
+          style={{
+            position: 'absolute',
+            top: 10,
+            right: 10,
+            zIndex: 20,
+            borderRadius: size / 2.9,
+            backgroundColor: AppColors.Blackop1,
+            borderColor: AppColors.yellowDarkI,
+            borderWidth: 1,
+          }}>
+          <Text
+            style={{
+              backgroundColor: checked ? AppColors.green : AppColors.white,
+              height: 15,
+              width: 15,
+              borderRadius: 30,
+            }}
+          />
+        </View>
+      ) : null}
+
+      <Image
+        resizeMode={'cover'}
+        key={index}
+        style={{
+          width: size,
+          height: size,
+          backgroundColor: AppColors.LightGrey,
+          borderRadius: size / 2.9,
+        }}
+        source={{uri: imageUrl}}
+      />
+    </Pressable>
+  );
+};
+export const PhotosList = ({route, navigation}) => {
+  const {reg} = route.params;
 
   const [PhotosList, setPhotosList] = React.useState([]);
   const [albumList, setAlbumList] = React.useState([]);
@@ -36,6 +99,13 @@ export const PhotosList = ({route}) => {
   const endCursorRef = React.useRef('0');
   const [PhotoCount, setPhotoCount] = React.useState(2000);
   const [GalleryImages, setGalleryImages] = React.useState([]);
+  const [toggle, setToggle] = React.useState(false);
+
+  const carouselRef = React.useRef(null);
+  useEffect(() => {
+    setToggle(reg);
+  },[]);
+
   useEffect(() => {
     checkPermission().then(() => {
       getAllAlbumData(),
@@ -43,7 +113,6 @@ export const PhotosList = ({route}) => {
         getPhotosFromAlbum(AlbumName, '0', PhotoCount).then(response => {
           setGalleryImages(response.edges);
           endCursorRef.current = '0';
-          console.log(response.edges);
         });
     });
   }, [PhotoCount]);
@@ -87,11 +156,32 @@ export const PhotosList = ({route}) => {
       // console.log(response);
     });
   };
-  const navigation = useNavigation();
+  const selectNum = toggle ? 1 : 25;
+  const [SelectedImages, setSelectedImages] = React.useState([]);
+  console.log(SelectedImages.length);
+  const CollectSelectedImages = (item, index, checkedvalue) => {
+    var newSelectedImages = [...SelectedImages];
+    if (newSelectedImages.indexOf(item.image.uri) === -1) {
+      if (newSelectedImages.length >= selectNum)
+        alert(`Cannot select more than ${selectNum}`);
+      else newSelectedImages.unshift(item.image.uri);
+    } else {
+      newSelectedImages.splice(newSelectedImages.indexOf(item.image.uri), 1);
+    }
+    setSelectedImages(newSelectedImages);
+    // crollToItem(at: index, at: .top, animated: true)
+  };
 
   return (
     <View style={{flex: 1, backgroundColor: '#161616'}}>
-      <AppHeader enableBack colorIcon={AppColors.white} />
+      <AppHeader enableBack colorIcon={AppColors.white}>
+        <AccentButton
+          disabled={SelectedImages.length === 0 ? true : false}
+          onPress={() => {
+            route.params.onReturn(SelectedImages), navigation.goBack();
+          }}
+        />
+      </AppHeader>
       <Container>
         <DropdownHeader
           onHeaderPress={() => {
@@ -114,63 +204,36 @@ export const PhotosList = ({route}) => {
           numColumns={3}
           renderItem={({item, index}) => {
             return (
-              <TouchableOpacity
+              <ImageGridView
+                imageUrl={item.node.image.uri}
+                index={index}
                 onPress={() => {
-                  route.params.onReturn(item.node.image.uri),
-                    navigation.goBack();
+                  reg
+                    ? (route.params.onReturn(item.node.image.uri),
+                      navigation.goBack())
+                    : CollectSelectedImages(item.node);
                 }}
-                style={{
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  flex: 1,
-                  margin: 10,
-                }}>
-                <Image
-                  style={{
-                    width: 80,
-                    height: 80,
-                    resizeMode: 'cover',
-                    borderRadius: 10,
-                    borderWidth: 2,
-                    borderColor: AppColors.green,
-                  }}
-                  source={{uri: item.node.image.uri}}
-                />
-              </TouchableOpacity>
+              />
             );
           }}
         />
         {AlbumName === 'All' ? (
           <FlatList
-            key={'_'}
-            keyExtractor={(_, index) => index.toString()}
+            keyExtractor={(index,key) => index.image.uri}
             data={PhotosList}
             numColumns={3}
             renderItem={({item, index}) => {
               return (
-                <TouchableOpacity
+                <ImageGridView
+                  imageUrl={item.image.uri}
+                  index={index}
                   onPress={() => {
-                    route.params.onReturn(item.image.uri), navigation.goBack();
+                    reg
+                      ? (route.params.onReturn(item.image.uri),
+                        navigation.goBack())
+                      : CollectSelectedImages(item);
                   }}
-                  style={{
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    flex: 1,
-                    margin: 10,
-                  }}>
-                  <Image
-                    key={index}
-                    style={{
-                      width: 80,
-                      height: 80,
-                      resizeMode: 'cover',
-                      borderRadius: 10,
-                      borderWidth: 2,
-                      borderColor: AppColors.green,
-                    }}
-                    source={{uri: item.image.uri}}
-                  />
-                </TouchableOpacity>
+                />
               );
             }}
           />

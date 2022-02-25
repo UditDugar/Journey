@@ -1,125 +1,75 @@
+import AsyncStorage from '@react-native-community/async-storage';
 import {useNavigation} from '@react-navigation/native';
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {StyleSheet, Text, View, TextInput, FlatList} from 'react-native';
+import {TouchableOpacity} from 'react-native-gesture-handler';
+import {API_TYPE, APP_APIS} from '../../ApiLogic/API_URL';
+import {ApiCall, PostApiCallWithBody} from '../../ApiLogic/Auth.Api';
 import {AppColors} from '../../assets/AppColors';
 import {AccentButton, Container} from '../../Components';
 import {AppHeader} from '../../Components/AppHeader';
 import {FontSize, Spacing, VertSpace} from '../../shared/Global.styles';
 import {HorizontalLine} from '../Journey/JourneyScreen';
-const Activities = [
-  {
-    name: 'Sleeping',
-    key: 0,
-  },
-  {
-    name: 'Eating',
-    key: 1,
-  },
-  {
-    name: 'Playing games',
-    key: 2,
-  },
-  {
-    name: 'Browsing social apps',
-    key: 3,
-  },
-  {
-    name: 'Doing Exercise',
-    key: 4,
-  },
-  {
-    name: 'Office work',
-    key: 5,
-  },
-  {
-    name: 'Studing',
-    key: 6,
-  },
-  {
-    name: 'Reading books',
-    key: 7,
-  },
-  {
-    name: 'Watching Movies/TV series',
-    key: 8,
-  },
-  {
-    name: 'Taking shower',
-    key: 9,
-  },
-  {
-    name: 'Driving',
-    key: 10,
-  },
-  {
-    name: 'Learning new languages',
-    key: 11,
-  },
-  {
-    name: 'Listening music',
-    key: 12,
-  },
-  {
-    name: 'Talking to friends/family',
-    key: 13,
-  },
-  {
-    name: 'Drawing',
-    key: 14,
-  },
-  {
-    name: 'Painting',
-    key: 15,
-  },
-  {
-    name: 'Cooking/Baking',
-    key: 16,
-  },
-  {
-    name: 'Cleaning house',
-    key: 17,
-  },
-  {
-    name: 'Singing',
-    key: 18,
-  },
-  {
-    name: 'Dancing',
-    key: 19,
-  },
-  {
-    name: 'Gossiping',
-    key: 20,
-  },
-  {
-    name: 'Drinking',
-    key: 21,
-  },
-  {
-    name: 'Partying',
-    key: 22,
-  },
-];
-
+import {Gravities, showToast} from '../../shared/Functions/ToastFunctions';
 export const ActivityList = ({route, navigation}) => {
-  const [search, setSearch] = React.useState(Activities);
-  // const navigation = useNavigation();
+  const {token} = route.params;
+  console.log(token);
+  const [search, setSearch] = React.useState([]);
+  const [AddText, setAddText] = React.useState('');
+ const [state,setState]=React.useState(false)
+  React.useEffect(() => {
+    ApiCall(APP_APIS.ACTIVITIES, API_TYPE.GET, token)
+      .then(async data => {
+        if (data.status === 1) {
+          setSearch(data.respData);
+          await AsyncStorage.setItem('Activity', JSON.stringify(data));
+          setResult(data.respData);
+        } else {
+          null;
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
+  }, [state]);
+
+  const [Result, setResult] = React.useState([]);
+
   const searchFilterFunction = text => {
     if (text) {
-      // Inserted text is not blank
-      // Filter the masterDataSource and update FilteredDataSource
       const newData = search.filter(function (item) {
-        // Applying filter for the inserted text in search bar
         const itemData = item.name ? item.name.toUpperCase() : ''.toUpperCase();
         const textData = text.toUpperCase();
         return itemData.indexOf(textData) > -1;
       });
       setSearch(newData);
     } else {
-      // Inserted text is blank
-      // Update FilteredDataSource with search
-      setSearch(Activities);
+      setSearch(Result);
     }
+  };
+  const data = {
+    name: AddText,
+  };
+  const AddActivity = () => {
+
+    PostApiCallWithBody(APP_APIS.ADD_ACTIVITY_NAME, API_TYPE.POST, token, data)
+      .then(data => {
+        if (data.status === 1) {
+          setState(!state)
+          showToast(data.message, Gravities.BOTTOM);
+          console.log(data);
+        } else {
+          setState(!state)
+          showToast('Error in name adding', Gravities.BOTTOM);
+          console.log(data);
+        }
+      })
+      .catch(error => {
+        setState(!state)
+        console.error('Error:', error);
+        showToast('Error in name adding', Gravities.BOTTOM);
+        
+      });
   };
 
   return (
@@ -133,25 +83,59 @@ export const ActivityList = ({route, navigation}) => {
           placeholder="Search here ..."
           placeholderTextColor={AppColors.DarkGrey}
           style={styles.search}
-          onChangeText={text => searchFilterFunction(text)}
+          onChangeText={text => {
+            searchFilterFunction(text), setAddText(text);
+          }}
           autoCorrect={false}
         />
       </View>
+      <VertSpace size={10} />
+      {
+        AddText.length !=0?      <Container
+        padding={Spacing.xxlarge}
+        style={{
+          flexDirection: 'row',
+
+          alignItems: 'center',
+        }}>
+        <AccentButton
+          title="Add"
+          style={{
+            backgroundColor: 'transparent',
+            borderWidth: 3,
+            borderColor: 'gray',
+          }}
+          disabled={false}
+          onPress={() => {
+            AddActivity()
+          }}
+        />
+
+        <Text
+          style={{
+            color: 'gray',
+            paddingLeft: 20,
+            fontWeight: '900',
+            fontSize: 15,
+          }}>
+          {AddText}
+        </Text>
+      </Container>:null
+      }
+
 
       <Container padding={Spacing.xxlarge}>
-        <VertSpace size={20} />
-
-        <VertSpace size={50} />
+        <VertSpace size={35} />
         <FlatList
           data={search}
-
-          keyExtractor={item => item.key}
+          keyExtractor={(item, key) => item.name}
           renderItem={({item}) => (
             <View style={{flex: 1}}>
               <Text
                 style={styles.item}
                 onPress={() => {
-                  route.params.onReturn(item.name), navigation.goBack();
+                  route.params.onReturn({name: item.name, id: item.id}),
+                    navigation.goBack();
                 }}>
                 {item.name}
               </Text>

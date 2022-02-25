@@ -9,7 +9,6 @@ import {
 } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 
-
 import {useNavigation} from '@react-navigation/native';
 import OTPInputView from '@twotalltotems/react-native-otp-input';
 import React, {useState} from 'react';
@@ -26,7 +25,12 @@ import {
 } from '../../shared/Global.styles';
 import {Container} from '../../Components/index';
 import {wp} from '../../shared/dimens';
-import {BioCircleIcon, CameraWhiteIcon, EditIcon, EditWIcon} from '../../shared/Icon.Comp';
+import {
+  BioCircleIcon,
+  CameraWhiteIcon,
+  EditIcon,
+  EditWIcon,
+} from '../../shared/Icon.Comp';
 import {ImgSourceCheck} from '../../Components/BioImageView';
 
 export const ProfilePicker = ({
@@ -34,7 +38,7 @@ export const ProfilePicker = ({
   style = {},
   size = wp(180),
   onSelected = () => {},
-  onPress
+  onPress,
 }) => {
   const navigation = useNavigation();
 
@@ -43,7 +47,7 @@ export const ProfilePicker = ({
     <View style={{width: size, height: size}}>
       <TouchableOpacity
         activeOpacity={0.9}
-         onPress={onPress}
+        onPress={onPress}
         style={{...style, position: 'absolute'}}>
         <View>
           {/* <View style={{ backgroundColor: 'red' }}>
@@ -70,8 +74,6 @@ export const ProfilePicker = ({
     </View>
   );
 };
-
-
 
 export const GenderOptions = [
   {
@@ -104,6 +106,7 @@ export const CameraButtonWhite = ({size}) => {
 };
 
 export const ProfileScreen = ({route}) => {
+  const {number} = route.params;
   const [loading, setLoading] = React.useState(false);
   const [Username, setUsername] = React.useState('');
   const [BirthDate, setBirthDate] = React.useState('');
@@ -130,15 +133,66 @@ export const ProfileScreen = ({route}) => {
     }
   }, [route.params?.imageList]);
 
-  
+  const [asyncDeviceInfo, setAsyncDeviceInfo] = React.useState(null);
+  React.useEffect(() => {
+    retrieveData();
+  });
+  const retrieveData = async () => {
+    try {
+      const value = await AsyncStorage.getItem('token');
+      setAsyncDeviceInfo(JSON.parse(value));
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const timestamp = new Date();
+  let imageFile = {
+    uri: imageUri,
+    type: 'image/jpeg',
+    name: `${Username}${timestamp}.jpg`,
+  };
+
+  const Registration = async () => {
+    var store = new FormData();
+    store.append('file', imageFile);
+    store.append('name', Username);
+    store.append('year_of_birth', BirthDate);
+    store.append('gender', Gender.text);
+    store.append('phone', number);
+
+    const url = 'https://bingehq.com/journey-app/api/update-user';
+    await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'multipart/form-data',
+        Authorization: `Bearer ${asyncDeviceInfo.user.token}`,
+      },
+      body: store,
+    })
+      .then(response => response.json())
+      .then(async data => {
+        if (data.status === 1) {
+          await AsyncStorage.setItem('UserData', JSON.stringify(data.user));
+
+          navigation.navigate('AddListScreen');
+        } else {
+          null;
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
+  };
+
   return (
     <SafeAreaView style={[GStyles.containerFlex, {backgroundColor: 'black'}]}>
       <AppHeader colorIcon={AppColors.white} enableBack>
         <NextButton
           disabled={disable}
           onPress={() => {
-            // UpdateDetails(),
-            navigation.navigate('AddListScreen');
+            Registration();
+            //, navigation.navigate('AddListScreen');
           }}
         />
       </AppHeader>
@@ -150,14 +204,18 @@ export const ProfileScreen = ({route}) => {
         <Container padding={Spacing.xxlarge}>
           <View style={{alignItems: 'center'}}>
             {/* <AppButton title="tets" onPress={() => CropPhoto()} /> */}
-            <ProfilePicker imageUrlParmas={imageUri} onPress={() => {
-          navigation.navigate('PhotosListScreen', {
-            onReturn: item => {
-              setImageUri(item);
-                // alert(item)
-              },
-          });
-        }}/>
+            <ProfilePicker
+              imageUrlParmas={imageUri}
+              onPress={() => {
+                navigation.navigate('PhotosListScreen', {
+                  onReturn: item => {
+                    setImageUri(item);
+                    // alert(item)
+                  },
+                  reg: true,
+                });
+              }}
+            />
           </View>
 
           <VertSpace size={40} />
@@ -227,9 +285,9 @@ export const ProfileScreen = ({route}) => {
           <VertSpace size={Spacing.size40} />
           <Label1 title={'Gender'} />
           <SelectableRadioButton
-          ContainerWidth={125}
-          buttonWidth={100}
-          paddingHorizontal={10}
+            ContainerWidth={125}
+            buttonWidth={100}
+            paddingHorizontal={10}
             data={GenderOptions}
             onSelected={value => {
               setGender(value), setDisable(false);
@@ -274,13 +332,12 @@ export const Label = ({title = 'Title', required = false, onPress}) => {
         </Text>
       ) : (
         <Text onPress={onPress}>
-          <EditWIcon   size={16} />
+          <EditWIcon size={16} />
         </Text>
       )}
     </View>
   );
 };
-
 
 export const Label1 = ({title = 'Title', required = false, onPress}) => {
   return (
@@ -314,7 +371,6 @@ export const Label1 = ({title = 'Title', required = false, onPress}) => {
     </View>
   );
 };
-
 
 const styles = StyleSheet.create({
   textInputContainer: {

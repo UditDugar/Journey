@@ -1,132 +1,88 @@
-import { useNavigation } from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 import OTPInputView from '@twotalltotems/react-native-otp-input';
-import axios from 'axios';
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, Alert, ActivityIndicator } from 'react-native';
+import React, {useState} from 'react';
+import {View, Text, StyleSheet, Alert, ActivityIndicator} from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 
-
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { AppColors } from '../../assets/AppColors';
-import { AppFonts } from '../../assets/fonts/AppFonts';
-import { NextButton } from '../../Components';
-import { AppHeader } from '../../Components/AppHeader';
-import { FontSize, GStyles, Spacing, VertSpace } from '../../shared/Global.styles';
-
+import {SafeAreaView} from 'react-native-safe-area-context';
+import {AppColors} from '../../assets/AppColors';
+import {AppFonts} from '../../assets/fonts/AppFonts';
+import {NextButton} from '../../Components';
+import {AppHeader} from '../../Components/AppHeader';
+import {
+  FontSize,
+  GStyles,
+  Spacing,
+  VertSpace,
+} from '../../shared/Global.styles';
+import {LoginApi} from '../../ApiLogic/Auth.Api';
+import {API_TYPE, APP_APIS} from '../../ApiLogic/API_URL';
+import { Gravities, showToast } from '../../shared/Functions/ToastFunctions';
 
 const OTP_INPUT_SIZE = 6;
 
-export function OtpVerification({ route }) {
-//   const [data, setString] = useClipboard();
+export function OtpVerification({route}) {
+  const [loading, setLoading] = React.useState(1);
   const [code, setCode] = React.useState('');
-  const [apiLoad, setApiLoad] = React.useState(false);
-  const [asyncDeviceInfo, setAsyncDeviceInfo] = React.useState({});
 
-  const { number } = route.params;
-// const loginMethod=async(code)=>{
-//   axios
-//   .post('https://abhaya-barsa.herokuapp.com/verify', {
-//     "code":"1184",
-//     "requestId": response.data.requestId,
-//   })
-//   .then(function (response) {
-//     console.log(response);
-//   });
+  const {number, is_new} = route.params;
+  const navigation = useNavigation();
 
-// }
+  const setLoginLocal = async () => {
+    const data = {
+      phone: number,
+      otp: code,
+    };
 
-//   const loginMethod = async OtpCode => {
-//     const { MobileNumber, countryCode } = route.params;
+    LoginApi(APP_APIS.VERIFY_OTP, API_TYPE.POST, data)
+      .then(async data => {
+        console.log('Token:', data.status);
+        setLoading(data.status);
 
-//     // var raw = JSON.stringify({
-//     //   phone: MobileNumber,
-//     //   otp: OtpCode,
-//     //   deviceID: asyncDeviceInfo.deviceID,
-//     //   deviceToken: asyncDeviceInfo.deviceToken,
-//     //   deviceType: asyncDeviceInfo.deviceType,
-//     // });
-//     // LOGIN API CALL
-//     const uniqueId = DeviceInfo.getUniqueId();
-//     const fcmToken = await firebase.messaging().getToken();
+        if (data.status === 1 && is_new === true) {
+          await AsyncStorage.setItem('token', JSON.stringify(data));
+          await AsyncStorage.setItem('is_login', 'true');
 
-//     console.log({ uniqueId, fcmToken, platform: Platform.OS });
-//     LoginApiCall({
-//       phone: MobileNumber,
-//       otp: OtpCode,
-//       deviceID: uniqueId,
-//       deviceToken: fcmToken.toString(),
-//       deviceType: Platform.OS.toString(),
-//     })
-//       .then(response => {
-//         if (response.result === 'failure') {
-//           setCode('');
-//           Toast.showWithGravity(
-//             'Wrong otp. Please try again',
-//             Toast.LONG,
-//             Toast.CENTER,
-//           );
-//         } else {
-//           if (response.status === 'old') {
-//             analytics().setUserProperties({
-//               name: response.user.name,
-//               phone: response.user.phone,
-//             });
+          navigation.navigate('ProfileScreen', {number: number});
+          showToast("User Verified",Gravities.BOTTOM)
 
-//             analytics().logLogin({ method: 'otp' });
-//             signIn({
-//               token: response.token,
-//               userData: response.user,
-//               countryCode,
-//             });
-//           } else {
-//             const setVerifiedNumber = async () => {
-//               try {
-//                 await AsyncStorage.setItem(
-//                   STR_KEYS.VERIFIED_NUMBER,
-//                   MobileNumber,
-//                 );
-//               } catch (e) {}
-//             };
-//             const setCountryCodeLocal = async () => {
-//               try {
-//                 await AsyncStorage.setItem(STR_KEYS.COUNTRY_CODE, countryCode);
-//               } catch (e) {}
-//             };
-//             setVerifiedNumber();
-//             setCountryCodeLocal();
-//             dispatch(saveVerifiedNumber({ verifiedNumber: MobileNumber }));
-//           }
-//         }
-//       })
-//       .catch(error => {});
-//   };
-const navigation=useNavigation()
+        } else if (data.status === 1 && is_new === false) {
+          await AsyncStorage.setItem('token', JSON.stringify(data));
+          await AsyncStorage.setItem('is_login', 'true');
+          showToast("Login Successful",Gravities.BOTTOM)
+          navigation.navigate('AddListScreen', {token: data.user.token});
+        } else if (data.status === 0) {
+          Alert.alert(
+            "Alert ",
+            "OTP is Incorrect",
+            [
+             
+              { text: "OK", onPress: () => setLoading(1)}
+            ]
+          );
 
-const setLoginLocal = async () => {
-  try {
-    await AsyncStorage.setItem('loginData', JSON.stringify(number));
-    // alert("stored")
-  } catch (err) {
-    console.log(err);
-  }
-};
+        } else {
+          showToast("Login Error",Gravities.CENTER)
+    
+        }
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  };
+
   return (
-    <SafeAreaView style={{ flex: 1 }}>
-      <View style={[GStyles.wallpaperBackground,{backgroundColor:"black"}]}>
-        {/* LOADER */}
-        {/* <Spinner visible={apiLoad} textContent={'Loading...'} /> */}
-
-        {/* HEADER */}
+    <SafeAreaView style={{flex: 1}}>
+      <View style={[GStyles.wallpaperBackground, {backgroundColor: 'black'}]}>
         <AppHeader enableBack>
           <NextButton
             title={'Done'}
             disabled={code.length < OTP_INPUT_SIZE}
-            ActiveColor='white'
-            InActiveColor='black'
+            ActiveColor="white"
+            InActiveColor="black"
             onPress={() => {
               // loginMethod(code);
-              setLoginLocal()
-            navigation.navigate('ProfileScreen')
+              setLoginLocal();
             }}
           />
         </AppHeader>
@@ -139,22 +95,13 @@ const setLoginLocal = async () => {
             textAlign: 'center',
             fontFamily: AppFonts.CalibriBold,
             color: AppColors.white,
-          }}
-        >
+          }}>
           OTP VERIFICATION
         </Text>
 
         <VertSpace size={Spacing.size40} />
 
-
-        {/* {loading ? (
-          <View style={{ padding: 40 }}>
-            <ActivityIndicator color={'black'} size={FontSize.x4large} />
-          </View>
-        ) : null} */}
-        {/* <Text style={{ fontSize: 15 }}>{code}</Text> */}
-
-        <View style={{ width: '100%', alignItems: 'center' }}>
+        <View style={{width: '100%', alignItems: 'center'}}>
           <OTPInputView
             style={styles.otpcontainer}
             pinCount={OTP_INPUT_SIZE}
@@ -166,7 +113,6 @@ const setLoginLocal = async () => {
               setCode(code);
             }}
           />
-
 
           {/* <Timer initialMinute={2} initialSeconds={30} />
           <View style={{ flexDirection: 'row' }}>
@@ -189,6 +135,7 @@ const setLoginLocal = async () => {
             </Ripple>
           </View> */}
         </View>
+        {loading == 0 ? <ActivityIndicator size="large" color="#fff" /> : null}
       </View>
     </SafeAreaView>
   );

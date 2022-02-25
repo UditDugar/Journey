@@ -1,81 +1,62 @@
 import React, { Component } from 'react';
-import { processResponse } from './Api.Components';
-import { API_TYPE, API_URL, APP_APIS } from './API_URL';
-import request from './axios.config';
+import { processResponse } from '../ApiLogic/Api.Components';
+import { API_TYPE, APP_APIS } from '../ApiLogic/API_URL';
 
-//  FOR SENSING OTP
-export const SendOtpAPiCall = (formData, onResponse, onError) => {
-  fetch(APP_APIS.SEND_OTP, {
-    method: API_TYPE.POST,
-    body: formData,
-  })
-    .then(processResponse)
-    .then((res) => {
-      onResponse(res);
+export const ApiCall=(URL,method='GET',token)=>{
+  // const url = 'https://bingehq.com/journey-app/api/activities';
+    return fetch(URL, {
+      method: method,
+      headers: {
+        'Content-Type': 'multipart/form-data',
+        Authorization: `Bearer ${token}`,
+      }
     })
-    .catch((error) => onError(error));
-};
+      .then(response => response.json())
+      .then(data => {
+       return data
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        return error
+      });
+}
 
-// LOGIN API CALL
-// export const LoginApiCall = (rawData, onResponse, onError) => {
-//   var myHeaders = new Headers();
-//   myHeaders.append('Content-Type', 'application/json');
 
-//   fetch(APP_APIS.LOGIN, {
-//     method: API_TYPE.POST,
-//     headers: myHeaders,
-//     body: rawData,
-//     redirect: 'follow',
-//   })
-//     .then(processResponse)
-//     .then((res) => {
-//       onResponse(res);
-//     })
-//     .catch((error) => onError(error));
-
-//     return request({
-//       url: APP_APIS.LOGIN,
-//       method: API_TYPE.POST,
-//       data: {
-//         token,
-//         name,
-//       },
-//     });
-
-// };
-
-export const LoginApiCall = (data) => {
-  return request({
-    url: APP_APIS.LOGIN,
-    method: API_TYPE.POST,
-    data,
-  });
-};
-
-// export const sendOtpApiCall = (phone, country_code) => {
-//   return request({
-//     url: APP_APIS.SEND_OTP,
-//     method: API_TYPE.POST,
-//     data: {
-//       country_code,
-//       phone,
-//     },
-//   });
-// };
-
-export const LogoutApiCall = (rawData, onResponse, onError) => {
-  var myHeaders = new Headers();
-  myHeaders.append('Content-Type', 'application/json');
-
-  fetch(APP_APIS.LOGOUT, {
-    method: API_TYPE.POST,
-    headers: myHeaders,
-    body: rawData,
-    redirect: 'follow',
-  })
-    .then(processResponse)
-    .then((res) => {
-      onResponse(res);
+export const PostApiCallWithBody=(URL,method='POST',token,body)=>{
+    return fetch(URL, {
+      method: method,
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      body:JSON.stringify(body)
     })
-    .catch((error) => onError(error));
-};
+      .then(response => response.json())
+      .then(data => {
+       return data
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        return error
+      });
+}
+
+
+export const LoginApi=(URL,method='POST',body)=>{
+  
+  return fetch(URL, {
+    method: method,
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body:JSON.stringify(body)
+  })
+    .then(response => response.json())
+    .then(data => {
+     return data
+    })
+    .catch(error => {
+      console.error('Error:', error);
+      return error
+    });
+}

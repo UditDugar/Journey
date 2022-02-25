@@ -1,23 +1,23 @@
-import React, { Component,useState } from 'react';
-import {
-  Pressable,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import React, {Component, useState} from 'react';
+import {Pressable, Text, TextInput, TouchableOpacity, View} from 'react-native';
 import Ripple from 'react-native-material-ripple';
-import { AppColors } from '../assets/AppColors';
-import { AppFonts } from '../assets/fonts/AppFonts';
-import { AppDimens, FontSize ,GStyles,HoriSpace, Spacing} from '../shared/Global.styles';
-import { DownArrowIcon } from '../shared/Icon.Comp';
+import {AppColors} from '../assets/AppColors';
+import {AppFonts} from '../assets/fonts/AppFonts';
+import {
+  AppDimens,
+  FontSize,
+  GStyles,
+  HoriSpace,
+  Spacing,
+} from '../shared/Global.styles';
+import {DownArrowIcon} from '../shared/Icon.Comp';
 
 export const NextButton = ({
   onPress = () => {},
   disabled = true,
   title = 'Next',
-  ActiveColor='white',
-  InActiveColor='black'
+  ActiveColor = 'white',
+  InActiveColor = 'black',
 }) => {
   return (
     <TouchableOpacity
@@ -30,15 +30,13 @@ export const NextButton = ({
       onPress={() => {
         if (disabled) {
         } else onPress();
-      }}
-    >
+      }}>
       <Text
         style={{
           fontFamily: AppFonts.CalibriBold,
-          color: disabled ?InActiveColor: ActiveColor  ,
+          color: disabled ? InActiveColor : ActiveColor,
           fontSize: FontSize.xlarge,
-        }}
-      >
+        }}>
         {title}
       </Text>
     </TouchableOpacity>
@@ -61,18 +59,16 @@ export const AccentButton = ({
         paddingHorizontal: 16,
         borderRadius: 30,
         ...style,
-        justifyContent:"center",
-        alignItems:"center"
-      }}
-    >
+        justifyContent: 'center',
+        alignItems: 'center',
+      }}>
       <Text
         style={{
           fontSize: FontSize.large,
           fontFamily: AppFonts.CalibriBold,
           color: AppColors.white,
-          fontWeight:"900"
-        }}
-      >
+          fontWeight: '900',
+        }}>
         {title}
       </Text>
     </Ripple>
@@ -81,17 +77,51 @@ export const AccentButton = ({
 
 export const Container = ({
   padding = Spacing.large,
-  
+
   children,
   style = {},
 }) => {
+  return <View style={{...style, paddingHorizontal: padding}}>{children}</View>;
+};
+export const MainContainer = ({children,style = {}}) => {
   return (
-    <View style={{ ...style, paddingHorizontal: padding }}>{children}</View>
+    <View
+      style={{
+        ...style,
+        justifyContent: 'center',
+        alignItems: 'center',
+        flex:1,
+        backgroundColor:"#161616"
+      }}>
+      {children}
+    </View>
   );
 };
 
 
-export const SelectableRadioButton=({
+export const CenterContainer = ({
+  padding = Spacing.large,
+
+  children,
+  style = {},
+}) => {
+  return (
+    <View
+      style={{
+        ...style,
+        paddingHorizontal: padding,
+        justifyContent: 'center',
+        alignItems: 'center',
+      }}>
+      {children}
+    </View>
+  );
+};
+
+
+
+
+export const SelectableRadioButton = ({
   data = [],
   initial = 0,
   onSelected,
@@ -100,10 +130,10 @@ export const SelectableRadioButton=({
   RightComponent = null,
   RightButtonOnPress = () => {},
   enableIcon = false,
-  paddingHorizontal=20,
-  ContainerWidth=120,
-  buttonWidth=90
-}) =>{
+  paddingHorizontal = 20,
+  ContainerWidth = 120,
+  buttonWidth = 90,
+}) => {
   // data -> for passing dropdown data
   // initial -> for
   const [value, setValue] = useState('');
@@ -116,23 +146,22 @@ export const SelectableRadioButton=({
     <View
       style={[
         horizontal ? GStyles.flexRow : GStyles.flexColumn,
-        { backgroundColor: AppColors.Transparent },
-      ]}
-    >
-      {data.map((res) => {
+        {backgroundColor: AppColors.Transparent},
+      ]}>
+      {data.map(res => {
         return (
           <View
             style={[
               GStyles.flexRow,
               {
                 paddingVertical: Spacing.large,
-                marginLeft:-10,
-                justifyContent:"center",
-                alignItems:"center",width:ContainerWidth
+                marginLeft: -10,
+                justifyContent: 'center',
+                alignItems: 'center',
+                width: ContainerWidth,
               },
             ]}
-            key={res.key}
-          >
+            key={res.key}>
             <Pressable
               onPress={() => {
                 if (editable) {
@@ -143,27 +172,23 @@ export const SelectableRadioButton=({
               style={[
                 GStyles.containView,
                 {
-                  backgroundColor:
-                    value === res.key
-                      ? '#C4C0C0'
-                      : '#524848',
-                  
+                  backgroundColor: value === res.key ? '#C4C0C0' : '#3e444d',
+
                   paddingVertical: 10,
-                  paddingHorizontal:paddingHorizontal,
+                  paddingHorizontal: paddingHorizontal,
                   borderRadius: 30,
                   marginRight: 30,
-                  width:buttonWidth
+                  width: buttonWidth,
                 },
-              ]}
-            >
+              ]}>
               <Text
                 style={{
                   // ...GStyles.radioText,
                   fontSize: FontSize.inputText,
                   fontFamily: AppFonts.CalibriBold,
-                  color:value === res.key?'#524848':'#C4C0C0',
-                }}
-              >
+                  color: value === res.key ? '#524848' : '#818182',
+                  fontWeight: '900',
+                }}>
                 {res.text}
               </Text>
             </Pressable>
@@ -172,7 +197,8 @@ export const SelectableRadioButton=({
       })}
     </View>
   );
-}
+};
+
 
 
 export const DropdownHeader = ({
@@ -188,8 +214,7 @@ export const DropdownHeader = ({
         alignItems: 'center',
         justifyContent: 'space-between',
         // backgroundColor: AppColors.green,
-      }}
-    >
+      }}>
       <Ripple
         onPress={() => onHeaderPress()}
         rippleContainerBorderRadius={20}
@@ -200,8 +225,7 @@ export const DropdownHeader = ({
           alignItems: 'center',
           paddingRight: 10,
           // backgroundColor: AppColors.Red,
-        }}
-      >
+        }}>
         <Text
           ellipsizeMode={'tail'}
           numberOfLines={1}
@@ -213,12 +237,11 @@ export const DropdownHeader = ({
                   color: AppColors.white,
                   fontFamily: AppFonts.CalibriBold,
                 }
-          }
-        >
+          }>
           {title}
         </Text>
         <HoriSpace size={Spacing.large} />
-        <DownArrowIcon size={13}  />
+        <DownArrowIcon size={13} />
       </Ripple>
       <RightContainer />
     </View>
@@ -226,3 +249,24 @@ export const DropdownHeader = ({
 };
 
 
+export const PressableButton = ({title = 'Journey', onPress}) => {
+  return (
+    <TouchableOpacity style={{width: 170,
+      justifyContent: 'center',
+      alignItems: 'center',
+      backgroundColor: '#161616',
+      borderRadius: 30,
+      borderWidth: 2,
+      borderColor: 'white',}} onPress={onPress}>
+      <Text
+        style={{
+          fontSize: 20,
+          fontWeight: '900',
+          paddingVertical: 10,
+          color: 'white',
+        }}>
+        {title}
+      </Text>
+    </TouchableOpacity>
+  );
+};

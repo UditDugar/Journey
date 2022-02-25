@@ -15,7 +15,7 @@ import {AppFonts} from '../../assets/fonts/AppFonts';
 import Country1 from '../../assets/svg/Flags/Country1.svg';
 import Country2 from '../../assets/svg/Flags/Country2.svg';
 import Ripple from 'react-native-material-ripple';
-import {Modal, Portal} from 'react-native-paper';
+import {ActivityIndicator, Modal, Portal} from 'react-native-paper';
 import auth from '@react-native-firebase/auth';
 import DeviceInfo from 'react-native-device-info';
 
@@ -25,10 +25,10 @@ import {Container, NextButton} from '../../Components';
 import {AppHeader, ModalHeader} from '../../Components/AppHeader';
 import {DownArrowIcon} from '../../shared/Icon.Comp';
 import {useNavigation} from '@react-navigation/native';
-import {SendOtpAPiCall} from '../../ApiLogic/Auth.Api';
-import {showToast} from '../../shared/Functions/ToastFunctions';
+import {LoginApi, SendOtpAPiCall} from '../../ApiLogic/Auth.Api';
+import {Gravities, showToast} from '../../shared/Functions/ToastFunctions';
 import {API_TYPE, APP_APIS} from '../../ApiLogic/API_URL';
-import axios from 'axios';
+import AsyncStorage from '@react-native-community/async-storage';
 
 let CountryData = {
   india: {
@@ -49,7 +49,7 @@ let CountryData = {
 };
 
 export function LoginScreen() {
-  const [loading, setLoading] = React.useState(false);
+  const [loading, setLoading] = React.useState(1);
   const [MobileNumber, setMobileNumber] = React.useState('');
   const [countryOptionsVisible, setcountryOptionsVisible] =
     React.useState(false);
@@ -61,99 +61,46 @@ export function LoginScreen() {
     3,
   )}-${MobileNumber.substring(3, 6)}-${MobileNumber.substring(6, 10)}`;
   const navigation = useNavigation();
+  const [userData, setUserData] = React.useState([]);
 
-  
-  // const SendOtpMethod = async (MobileNumber, countryCode) => {
-  //   // let formData = new FormData();
-  //   // formData.append('number', countryCode+MobileNumber);
-  //   // formData.append('country_code', countryCode);
-  //   // console.log(formData);
-  //   console.log({number: countryCode + MobileNumber});
+  const setLoginLocal = async () => {
+    AsyncStorage.clear();
+    setLoading(0);
+    const phone = {
+      phone: MobileNumber,
+    };
 
-  //   axios
-  //     .post('https://abhaya-barsa.herokuapp.com/request', {
-  //       number: 919348557381,
-  //     })
-  //     .then(function (response) {
-  //       console.log(response.data.requestId);
-  //       setLoading(false);
-  //       navigation.navigate('OtpVerificationScreen', {
-  //         countryCode,
-  //         MobileNumber,
-  //         formattedMobileNumber,
-  //         response,
-  //       });
-  //     });
+    LoginApi(APP_APIS.LOGIN, API_TYPE.POST, phone)
+      .then(data => {
+        console.log('Success:', data);
+        setUserData(data);
+        setLoading(data.status);
+        if (data.status == 1) {
+          navigation.navigate('OtpVerificationScreen', {
+            number: MobileNumber,
+            is_new: data.is_new_user,
+          });
+          showToast("OTP sent!",Gravities.BOTTOM)
 
-  //   // await fetch('https://abhaya-barsa.herokuapp.com/request', {
-  //   //   method: 'POST',
-  //   //   headers: {
-  //   //     'Accept': 'application/json',
-  //   //     'Content-Type': 'application/json'
-  //   //   },
-  //   //   body: {"number":919348557381},
-
-  //   // })
-  //   //   .then(res => {
-  //   //     showToast('You will receive an OTP shortly');
-  //   //     setLoading(false);
-  //   //     console.log(res);
-  //   //     navigation.navigate('OtpVerificationScreen', {
-  //   //       countryCode,
-  //   //       MobileNumber,
-  //   //       formattedMobileNumber,
-  //   //       res,
-  //   //     });
-  //   //   })
-  //   //   .catch(error => {
-  //   //     console.log(error),
-  //   //       setLoading(false),
-  //   //       showToast('Wrong OTP, try again');
-  //   //   });
-
-  //   // SendOtpAPiCall(
-
-  //   //   onResponse => {
-  //   //     console.log(onResponse);
-  //   //     if (onResponse.statusCode == 200) {
-  //   //       showToast('You will receive an OTP shortly');
-  //   //       setLoading(false);
-  //   //       navigation.navigate('OtpVerificationScreen', {
-  //   //         countryCode,
-  //   //         MobileNumber,
-  //   //         formattedMobileNumber
-  //   //       });
-  //   //     } else showToast('Wrong OTP, try again');
-  //   //   },
-  //   //   onError => {
-  //   //     setLoading(false);
-  //   //   },
-  //   // )
-  // };
-  const setLoginLocal = async (loginData) => {
-
-    const uniqueId = DeviceInfo.getUniqueId();
-    // const fcmToken = await firebase.messaging().getToken();
-
-    console.log({ uniqueId, platform: Platform.OS });
-    
+          alert(`Your OTP:-${data.user.otp}`);
+        } else if(data.status==0) {
+          showToast("OTP sent error",Gravities.BOTTOM)
+        }
+      })
+      .catch(err => {
+        console.log(err);
+      });
   };
+
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: AppColors.white}}>
-      <ScreenLoader message="loading wait..." loading={loading} />
       <View style={[GStyles.wallpaperBackground, {backgroundColor: 'black'}]}>
-        {/* APP HEADER */}
         <AppHeader colorIcon={'white'}>
           <NextButton
             disabled={
               MobileNumber.length < CountryData[Country].limit ? true : false
             }
-            onPress={() => {
-              // setLoading(true);
-              // SendOtpMethod(MobileNumber, countryCode);
-              setLoginLocal()
-              navigation.navigate('OtpVerificationScreen',{number:countryCode+MobileNumber});
-            }}
+            onPress={() => {setLoginLocal()}}
           />
         </AppHeader>
 
@@ -183,7 +130,7 @@ export function LoginScreen() {
           <TextInput
             placeholderTextColor={AppColors.white}
             autoFocus
-            onFocus={()=> Keyboard.addListener()}
+            onFocus={() => Keyboard.addListener()}
             style={{
               // width: '100%',
               paddingHorizontal: 40,
@@ -230,6 +177,8 @@ export function LoginScreen() {
             </Ripple>
           </View>
         </View>
+
+        {loading == 0 ? <ActivityIndicator size="large" color="#fff" /> : null}
       </View>
     </SafeAreaView>
   );

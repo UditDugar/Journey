@@ -35,7 +35,7 @@ import Avatar from '../assets/svg/Icons/Avatar.svg';
 import Calender from '../assets/svg/Icons/Calender.svg';
 import Notes from '../assets/svg/Icons/Notes.svg';
 import Share from '../assets/svg/Icons/Share.svg';
-
+import Image from '../assets/svg/Icons/image.svg'
 //NAVIGATION
 import Menu from '../assets/svg/Icons/Menu.svg';
 import Search from '../assets/svg/Icons/Search.svg';
@@ -101,6 +101,21 @@ export const MenuIcons = ({
       color={color}
       height={size}
       width={10}
+      style={{ ...style, backgroundColor: AppColors.Transparent }}
+    />
+  );
+};
+
+export const ImagePlaceHolder = ({
+  size = 30,
+  style,
+  color
+}) => {
+  return (
+    <Image
+      color={color}
+      height={size}
+      width={size}
       style={{ ...style, backgroundColor: AppColors.Transparent }}
     />
   );

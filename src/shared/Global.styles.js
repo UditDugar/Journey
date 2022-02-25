@@ -34,7 +34,7 @@ export const WhiteFadeView = ({ reverse, style, children }) => {
     <LinearGradient
       colors={
         reverse === true
-          ? [AppColors.white, AppColors.white, AppColors.whiteop00]
+          ? ['#161616', '#161616', '#161616']
           : [AppColors.whiteop00, AppColors.white, AppColors.white]
       }
       style={style ? { ...style } : { flex: 1 }}

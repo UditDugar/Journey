@@ -3,23 +3,41 @@ import React, {useState} from 'react';
 import {AppHeader} from '../../Components/AppHeader';
 import {AppColors} from '../../assets/AppColors';
 import {AccentButton, Container, NextButton} from '../../Components';
-import {TextInput} from 'react-native-gesture-handler';
+import {TextInput, TouchableOpacity} from 'react-native-gesture-handler';
 import {FontSize, VertSpace} from '../../shared/Global.styles';
 import {CalenderIcon, EditWIcon, ShareIcon} from '../../shared/Icon.Comp';
-import { useNavigation } from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
+import moment from 'moment';
+import { MonthString } from '../Journey/JourneyScreen';
 
 const Notes = ({route, navigation}) => {
   const [noteText, setNoteText] = useState('');
+  const stringValueDate = (date, month, year) => {
+    var dateString = `${date}`,
+      monthString = `${month}`;
+
+    return `${year}-${monthString}-${dateString}`;
+  };
+
+  const CurrentDate = moment().date();
+  const CurrentYear = moment().year();
+  const CurrentMonthIndex = moment().month();
+
+  const [state, setState] = React.useState(
+    stringValueDate(CurrentDate, CurrentMonthIndex + 1, CurrentYear),
+  );
+  const newDate = state.split('-');
+
   return (
     <View style={{flex: 1, backgroundColor: '#161616'}}>
       <AppHeader colorIcon={AppColors.white} enableBack>
         <AccentButton
           title="Post"
+          disabled={noteText === '' ? true : false}
           onPress={() => {
             route.params.onReturn(noteText), navigation.goBack();
           }}
         />
-
       </AppHeader>
 
       <Container>
@@ -31,7 +49,7 @@ const Notes = ({route, navigation}) => {
           multiline
           onChangeText={text => setNoteText(text)}
         />
-        <VertSpace size={30} />
+        <VertSpace size={60} />
 
         <View
           style={{
@@ -55,7 +73,7 @@ const Notes = ({route, navigation}) => {
               </Text>
             </View>
           </View>
-          <Text>
+          <Text onPress={() => navigation.navigate('ContactsList')}>
             <EditWIcon />
           </Text>
         </View>
@@ -78,11 +96,16 @@ const Notes = ({route, navigation}) => {
                 Date
               </Text>
               <Text style={{fontWeight: '900', color: AppColors.white}}>
-                29-Jan-2022
+                {newDate[2]}-<MonthString MonthIndex={newDate[1]}/>-{newDate[0]}
               </Text>
             </View>
           </View>
-          <Text>
+          <Text
+            onPress={() =>
+              navigation.navigate('MonthPicker', {
+                onReturn: item => setState(item),
+              })
+            }>
             <EditWIcon />
           </Text>
         </View>
