@@ -1,12 +1,10 @@
-import React, {useState,useEffect} from 'react';
+import React, {useState, useEffect} from 'react';
 import ScrollPicker from 'react-native-picker-scrollview';
 import {AppColors} from '../../assets/AppColors';
-import {
-  WheelPicker
-} from 'react-native-wheel-picker-android';
+import {WheelPicker} from 'react-native-wheel-picker-android';
 import {AppRegistry, StyleSheet, Text, View, Button} from 'react-native';
-import { AppHeader } from '../../Components/AppHeader';
-import { NextButton } from '../../Components';
+import {AppHeader} from '../../Components/AppHeader';
+import {NextButton} from '../../Components';
 
 const hours = [
   '00',
@@ -97,13 +95,13 @@ const minutes = [
   '58',
   '59',
 ];
-export const TimePicker = ({route,navigation}) => {
+export const TimePicker = ({route, navigation}) => {
   const [Hour, setHour] = useState(0);
   const [Min, setMin] = useState(0);
-const [combine,setCombine]=useState({hour:0,min:0})
-useEffect(()=>{
-  setCombine({hour:Hour,min:Min})
-},[Min,Hour])
+  const [combine, setCombine] = useState({hour: 0, min: 0});
+  useEffect(() => {
+    setCombine({hour: Hour, min: Min});
+  }, [Min, Hour]);
   return (
     <View
       style={{
@@ -112,54 +110,82 @@ useEffect(()=>{
         alignItems: 'center',
         justifyContent: 'center',
       }}>
-      <View style={{position:"absolute",top:0,width:"100%"}}>
-      <AppHeader colorIcon={'white'} enableBack>
-        <NextButton
-        title='Done'
-        disabled={false}
-          onPress={() => {
-          
-            route.params.onReturn(combine),navigation.goBack()
-    
-          }}
-        />
-      </AppHeader>
+      <View style={{position: 'absolute', top: 0, width: '100%'}}>
+        <AppHeader colorIcon={'white'} enableBack>
+          <NextButton
+            title="Done"
+            disabled={false}
+            onPress={() => {
+              route.params.onReturn(combine), navigation.goBack();
+            }}
+          />
+        </AppHeader>
       </View>
-
-      <View style={{position: 'absolute', left: 0}}>
-        <WheelPicker
-          selectedItem={0}
-          data={hours}
-          onItemSelected={item => setHour(item)}
-          itemTextColor="gray"
-          hideIndicator={true}
-          selectedItemTextColor="white"
-          itemTextSize={20}
-          selectedItemTextSize={22}
-        />
+      <View
+        style={{
+          alignItems: 'center',
+          justifyContent: 'center',
+          paddingHorizontal: 50,
+          flexDirection: 'row',
+        }}>
+        <View>
+          <WheelPicker
+            selectedItem={0}
+            data={hours}
+            onItemSelected={item => setHour(item)}
+            itemTextColor="gray"
+            hideIndicator={true}
+            selectedItemTextColor="white"
+            itemTextSize={20}
+            selectedItemTextSize={24}
+            style={{
+              width: 70,
+              height: 200,
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}
+          />
+        </View>
+        <View>
+          <WheelPicker
+            selectedItem={0}
+            data={['hours']}
+            // onItemSelected={item => setMin(item)}
+            itemTextColor="gray"
+            hideIndicator={true}
+            selectedItemTextColor="white"
+            itemTextSize={20}
+            selectedItemTextSize={24}
+            style={{width: 65, height: 200}}
+          />
+        </View>
+        <View>
+          <WheelPicker
+            selectedItem={0}
+            data={minutes}
+            onItemSelected={item => setMin(item)}
+            itemTextColor="gray"
+            hideIndicator={true}
+            selectedItemTextColor="white"
+            itemTextSize={20}
+            selectedItemTextSize={24}
+            style={{width: 70, height: 200}}
+          />
+        </View>
+        <View>
+          <WheelPicker
+            selectedItem={0}
+            data={['min']}
+            // onItemSelected={item => setMin(item)}
+            itemTextColor="gray"
+            hideIndicator={true}
+            selectedItemTextColor="white"
+            itemTextSize={20}
+            selectedItemTextSize={24}
+            style={{width: 40, height: 200}}
+          />
+        </View>
       </View>
-
-      <Text
-        style={{color: 'white', fontSize: 22, position: 'absolute', left: 125}}>
-        hours
-      </Text>
-      <View style={{position: 'absolute', right: 40}}>
-        <WheelPicker
-          selectedItem={0}
-          data={minutes}
-          onItemSelected={item => setMin(item)}
-          itemTextColor="gray"
-          hideIndicator={true}
-          selectedItemTextColor="white"
-          itemTextSize={20}
-          selectedItemTextSize={22}
-        />
-      </View>
-
-      <Text
-        style={{color: 'white', fontSize: 22, position: 'absolute', right: 80}}>
-        min
-      </Text>
     </View>
   );
 };

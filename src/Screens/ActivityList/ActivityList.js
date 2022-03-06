@@ -1,22 +1,23 @@
 import AsyncStorage from '@react-native-community/async-storage';
 import {useNavigation} from '@react-navigation/native';
 import React, {useEffect, useState} from 'react';
-import {StyleSheet, Text, View, TextInput, FlatList} from 'react-native';
+import {StyleSheet, Text, View, TextInput, FlatList, Keyboard} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import {API_TYPE, APP_APIS} from '../../ApiLogic/API_URL';
 import {ApiCall, PostApiCallWithBody} from '../../ApiLogic/Auth.Api';
 import {AppColors} from '../../assets/AppColors';
-import {AccentButton, Container} from '../../Components';
+import {AccentButton, Container, MainContainer} from '../../Components';
 import {AppHeader} from '../../Components/AppHeader';
 import {FontSize, Spacing, VertSpace} from '../../shared/Global.styles';
 import {HorizontalLine} from '../Journey/JourneyScreen';
 import {Gravities, showToast} from '../../shared/Functions/ToastFunctions';
+import {ActivityIndicator} from 'react-native-paper';
 export const ActivityList = ({route, navigation}) => {
   const {token} = route.params;
   console.log(token);
   const [search, setSearch] = React.useState([]);
   const [AddText, setAddText] = React.useState('');
- const [state,setState]=React.useState(false)
+  const [state, setState] = React.useState(false);
   React.useEffect(() => {
     ApiCall(APP_APIS.ACTIVITIES, API_TYPE.GET, token)
       .then(async data => {
@@ -51,24 +52,22 @@ export const ActivityList = ({route, navigation}) => {
     name: AddText,
   };
   const AddActivity = () => {
-
     PostApiCallWithBody(APP_APIS.ADD_ACTIVITY_NAME, API_TYPE.POST, token, data)
       .then(data => {
         if (data.status === 1) {
-          setState(!state)
+          setState(!state);
           showToast(data.message, Gravities.BOTTOM);
           console.log(data);
         } else {
-          setState(!state)
+          setState(!state);
           showToast('Error in name adding', Gravities.BOTTOM);
           console.log(data);
         }
       })
       .catch(error => {
-        setState(!state)
+        setState(!state);
         console.error('Error:', error);
         showToast('Error in name adding', Gravities.BOTTOM);
-        
       });
   };
 
@@ -87,73 +86,78 @@ export const ActivityList = ({route, navigation}) => {
             searchFilterFunction(text), setAddText(text);
           }}
           autoCorrect={false}
+          
         />
       </View>
       <VertSpace size={10} />
-      {
-        AddText.length !=0?      <Container
-        padding={Spacing.xxlarge}
-        style={{
-          flexDirection: 'row',
-
-          alignItems: 'center',
-        }}>
-        <AccentButton
-          title="Add"
+      {AddText.length != 0 ? (
+        <Container
+          padding={Spacing.xxlarge}
           style={{
-            backgroundColor: 'transparent',
-            borderWidth: 3,
-            borderColor: 'gray',
-          }}
-          disabled={false}
-          onPress={() => {
-            AddActivity()
-          }}
-        />
-
-        <Text
-          style={{
-            color: 'gray',
-            paddingLeft: 20,
-            fontWeight: '900',
-            fontSize: 15,
+            flexDirection: 'row',
+            alignItems: 'center',
           }}>
-          {AddText}
-        </Text>
-      </Container>:null
-      }
+          <AccentButton
+            title="Add"
+            style={{
+              backgroundColor: 'transparent',
+              borderWidth: 3,
+              borderColor: 'gray',
+            }}
+            disabled={false}
+            onPress={() => {
+              AddActivity();
+            }}
+          />
 
+          <Text
+            style={{
+              color: 'gray',
+              paddingLeft: 20,
+              fontWeight: '900',
+              fontSize: 15,
+            }}>
+            {AddText}
+          </Text>
+        </Container>
+      ) : null}
+      {Result.length === 0? (
+        <MainContainer>
+        <ActivityIndicator color="#178" size={'large'} />
+        </MainContainer>
+        
+      ) : (
+        <Container padding={Spacing.xxlarge}>
+          <VertSpace size={35} />
+          <FlatList
+            data={search}
+            keyExtractor={(item, key) => item.name}
+            renderItem={({item}) => (
+              <View style={{flex: 1}}>
+                <Text
+                  style={styles.item}
+                  onPress={() => {
+                    route.params.onReturn({name: item.name, id: item.id}),
+                      navigation.goBack();
+                  }}>
+                  {item.name}
+                </Text>
+                <VertSpace size={10} />
 
-      <Container padding={Spacing.xxlarge}>
-        <VertSpace size={35} />
-        <FlatList
-          data={search}
-          keyExtractor={(item, key) => item.name}
-          renderItem={({item}) => (
-            <View style={{flex: 1}}>
-              <Text
-                style={styles.item}
-                onPress={() => {
-                  route.params.onReturn({name: item.name, id: item.id}),
-                    navigation.goBack();
-                }}>
-                {item.name}
-              </Text>
-              <VertSpace size={10} />
+                <HorizontalLine
+                  marginLeft={10}
+                  height={0.7}
+                  backgroundColor="gray"
+                  width="50%"
+                  alignItems="center"
+                />
 
-              <HorizontalLine
-                marginLeft={10}
-                height={0.7}
-                backgroundColor="gray"
-                width="50%"
-                alignItems="center"
-              />
-
-              <VertSpace size={10} />
-            </View>
-          )}
-        />
-      </Container>
+                <VertSpace size={10} />
+              </View>
+            )}
+          />
+        </Container>
+      )}
     </View>
   );
 };

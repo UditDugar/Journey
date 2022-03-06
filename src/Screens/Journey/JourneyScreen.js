@@ -220,7 +220,7 @@ export const JourneyScreen = ({route, navigation}) => {
   const [box1, setBox1] = React.useState(0);
   const [box2, setBox2] = React.useState(0);
   const [box3, setBox3] = React.useState(0);
-  console.log(box0, box1, box2, box3);
+
   var a = 0;
   var b = 0;
   var c = 0;
@@ -339,6 +339,7 @@ export const JourneyScreen = ({route, navigation}) => {
                 maxHeight: 110,
                 alignItems: 'center',
                 minHeight: 0,
+                marginVertical: images.length === 0 ? 0 : 20,
               },
             ]}>
             <ScrollView horizontal>
@@ -362,9 +363,12 @@ export const JourneyScreen = ({route, navigation}) => {
             </ScrollView>
           </View>
 
-          <View style={{}}>
+          <View style={{paddingVertical: notes === '' ? 0 : 30}}>
             <Text
-              style={{color: '#fff', fontSize: 18}}
+              style={{
+                color: '#fff',
+                fontSize: 14,
+              }}
               onTextLayout={onTextLayout}
               numberOfLines={numberOfLines}>
               {notes}

@@ -47,116 +47,64 @@ export const MonthPicker = ({route}) => {
 
   const ABHAYA = '2000-00-02';
   const maxDate = new Date(YearSelected, MonthSelected, 1);
-const MM='MM'
+  const MM = 'MM';
+  
   //  alert(ABHAYA.length);
   const [selectedStartDate, setSelectedStartDate] = React.useState(null);
   const startDate = selectedStartDate ? selectedStartDate : '';
   return (
     <SafeAreaView style={{backgroundColor: '#161616', flex: 1}}>
-      <AppHeader colorIcon={AppColors.white} enableBack>
-        {/* <NextButton
-          title="Done"
-          disabled={false}
-          onPress={() => {
-            route.params.onReturn(startDate), navigation.goBack();
-          }}
-        /> */}
-      </AppHeader>
+      <AppHeader colorIcon={AppColors.white} enableBack></AppHeader>
       <VertSpace size={70} />
-      {/* <Container>
-        <DropdownHeader
-          fontStyles={styles.yearStyles}
-          title={YearSelected}
-          onHeaderPress={() =>
-            navigation.navigate('YearPicker', {
-              onReturn: item => {
-                setYearSelected(item);
-              },
-            })
-          }
-        />
-
-        <VertSpace size={Spacing.xlarge} />
-        <ScrollView
-          showsHorizontalScrollIndicator={false}
-          horizontal
-          style={{marginHorizontal: -Spacing.large}}>
-          <HoriSpace size={Spacing.large} />
-
-          {MonthNames.map((month, index) => {
-            return (
-              <View key={index} style={{flexDirection: 'row'}}>
-                <Ripple
-                  onPress={() => {
-                    setMonthSelected(index);
-                  }}
-                  // disabled={index > MonthIndex}
-                  rippleContainerBorderRadius={100}
-                  style={{
-                    ...styles.monthContainer,
-                    backgroundColor:
-                      // index > MonthIndex
-                      //   ? AppColors.VeryLightGrey
-                      index === MonthSelected
-                        ? AppColors.white
-                        : AppColors.DarkGrey,
-                  }}>
-                  <Text
-                    style={{
-                      ...styles.monthFontStyles,
-                      color:
-                        // index > MonthIndex
-                        //   ? AppColors.LightGrey
-                        index === MonthSelected
-                          ? AppColors.DarkGrey
-                          : AppColors.white,
-                      fontWeight: '700',
-                    }}>
-                    {month}
-                  </Text>
-                </Ripple>
-                <HoriSpace size={Spacing.medium} />
-              </View>
-            );
-          })}
-        </ScrollView>
-      </Container> */}
 
       <CalendarList
         horizontal
         pagingEnabled
         futureScrollRange={12}
-        
         current={maxDate}
         onDayPress={day => {
           setSelectedStartDate(day.dateString),
-          route.params.onReturn(day.dateString), navigation.goBack()
+            route.params.onReturn(day.dateString),
+            navigation.goBack();
         }}
         markingType="multi-period"
         markedDates={{
-          '2022-01-01': {
+          '2022-02-01': {
             periods: [{startingDay: false, endingDay: true, color: '#5f9ea0'}],
           },
-          '2022-01-02': {
+          '2022-02-02': {
             periods: [
               {startingDay: true, endingDay: false, color: '#ffa500'},
               {color: 'transparent'},
-            ]
-          }
-   
+            ],
+          },
         }}
-        
+        // customHeaderTitle={
+        //   <Text
+        //     style={{
+        //       fontWeight:"900",
+        //       position: 'absolute',
+        //       color: 'white',
+        //       bottom: 10,
+        //       fontSize:35
+        //     }}>
+        //     {maxDate.getMonth() }-{maxDate.getFullYear()}
+            
+        //   </Text>
+        // }
+        headerStyle={{marginTop: 100}}
+        // renderHeader={maxD}
         theme={{
           textDayFontFamily: AppFonts.CalibriBold,
           calendarBackground: '#161616',
           textSectionTitleDisabledColor: '#d9e1e8',
           selectedDayTextColor: AppColors.DarkGrey,
-          todayTextColor: AppColors.VeryDarkGrey,
+          todayTextColor: AppColors.blue,
           dayTextColor: AppColors.white,
           monthTextColor: AppColors.green,
           indicatorColor: AppColors.LightGrey,
-          textMonthFontWeight:'900',
-          textMonthFontSize:FontSize.xxlarge,
+          textMonthFontWeight: '900',
+          textMonthFontSize: 35,
           
         }}
       />
@@ -166,35 +114,3 @@ const MM='MM'
     </SafeAreaView>
   );
 };
-
-const AppCalenderTheme = {
-  textDayFontFamily: AppFonts.CalibriBold,
-  calendarBackground: '#161616',
-  textSectionTitleDisabledColor: '#d9e1e8',
-  selectedDayTextColor: AppColors.white,
-  todayTextColor: AppColors.white,
-  dayTextColor: AppColors.white,
-  monthTextColor: AppColors.white,
-  indicatorColor: AppColors.LightGrey,
-  todayBackgroundColor: AppColors.green,
-};
-
-const styles = StyleSheet.create({
-  monthFontStyles: {
-    fontSize: FontSize.inputText,
-    fontFamily: AppFonts.CalibriBold,
-    color: AppColors.DarkGrey,
-  },
-  monthContainer: {
-    backgroundColor: AppColors.LightGrey,
-    borderRadius: 50,
-    height: 40,
-    ...GStyles.containView,
-    paddingHorizontal: Spacing.large,
-  },
-  yearStyles: {
-    fontSize: FontSize.x6Large,
-    color: AppColors.white,
-    fontFamily: AppFonts.CalibriBold,
-  },
-});
