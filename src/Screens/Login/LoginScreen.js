@@ -10,7 +10,6 @@ import {
   VertSpace,
 } from '../../shared/Global.styles';
 import {AppColors} from '../../assets/AppColors';
-// import { Container, NextButton } from '../../components/Mini';
 import {AppFonts} from '../../assets/fonts/AppFonts';
 import Country1 from '../../assets/svg/Flags/Country1.svg';
 import Country2 from '../../assets/svg/Flags/Country2.svg';
@@ -189,7 +188,6 @@ export const CountrySelect = ({
   onclose = () => {},
   onSubmit = () => {},
 }) => {
-  // const [groupName, setGroupName] = React.useState('')
 
   const [Country, setCountry] = React.useState('india');
   return (

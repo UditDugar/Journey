@@ -2,13 +2,19 @@ import {StyleSheet, Text, View} from 'react-native';
 import React, {useState} from 'react';
 import {AppHeader} from '../../Components/AppHeader';
 import {AppColors} from '../../assets/AppColors';
-import {AccentButton, Container, NextButton} from '../../Components';
+import {
+  AccentButton,
+  CenterContainer,
+  CenterRowContainer,
+  Container,
+  NextButton,
+} from '../../Components';
 import {TextInput, TouchableOpacity} from 'react-native-gesture-handler';
 import {FontSize, VertSpace} from '../../shared/Global.styles';
 import {CalenderIcon, EditWIcon, ShareIcon} from '../../shared/Icon.Comp';
 import {useNavigation} from '@react-navigation/native';
 import moment from 'moment';
-import { MonthString } from '../Journey/JourneyScreen';
+import {MonthString} from '../Journey/JourneyScreen';
 
 const Notes = ({route, navigation}) => {
   const [noteText, setNoteText] = useState('');
@@ -50,19 +56,8 @@ const Notes = ({route, navigation}) => {
           onChangeText={text => setNoteText(text)}
         />
         <VertSpace size={60} />
-
-        <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-          }}>
-          <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}>
+        <CenterRowContainer>
+          <CenterRowContainer>
             <ShareIcon size={50} />
             <View style={{marginLeft: 20}}>
               <Text style={{fontWeight: '900', color: AppColors.MediumGrey}}>
@@ -72,34 +67,26 @@ const Notes = ({route, navigation}) => {
                 Public
               </Text>
             </View>
-          </View>
+          </CenterRowContainer>
           <Text onPress={() => navigation.navigate('ContactsList')}>
             <EditWIcon />
           </Text>
-        </View>
+        </CenterRowContainer>
         <VertSpace size={30} />
-        <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-          }}>
-          <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}>
+
+        <CenterRowContainer>
+          <CenterRowContainer>
             <CalenderIcon size={50} />
             <View style={{marginLeft: 20}}>
               <Text style={{fontWeight: '900', color: AppColors.MediumGrey}}>
                 Date
               </Text>
               <Text style={{fontWeight: '900', color: AppColors.white}}>
-                {newDate[2]}-<MonthString MonthIndex={newDate[1]}/>-{newDate[0]}
+                {newDate[2]}-<MonthString MonthIndex={newDate[1]} />-
+                {newDate[0]}
               </Text>
             </View>
-          </View>
+          </CenterRowContainer>
           <Text
             onPress={() =>
               navigation.navigate('MonthPicker', {
@@ -108,7 +95,7 @@ const Notes = ({route, navigation}) => {
             }>
             <EditWIcon />
           </Text>
-        </View>
+        </CenterRowContainer>
       </Container>
     </View>
   );

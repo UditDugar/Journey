@@ -128,16 +128,4 @@ const styles = StyleSheet.create({
     fontFamily: AppFonts.CalibriBold,
     color: AppColors.DarkGrey,
   },
-  // monthContainer: {
-  //   backgroundColor: AppColors.LightGrey,
-  //   borderRadius: 50,
-  //   height: 40,
-  //   ...GStyles.containView,
-  //   paddingHorizontal: Spacing.large,
-  // },
-  // yearStyles: {
-  //   fontSize: FontSize.x6Large,
-  //   color: AppColors.DarkGrey,
-  //   fontFamily: AppFonts.CalibriBold,
-  // },
 });

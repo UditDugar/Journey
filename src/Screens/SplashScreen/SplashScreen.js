@@ -1,6 +1,7 @@
 import {StyleSheet, Text, View, Image} from 'react-native';
 import React from 'react';
 import {ActivityIndicator} from 'react-native-paper';
+import {CenterContainer, CenterRowContainer} from '../../Components';
 
 export const SplashScreen = () => {
   return (
@@ -40,19 +41,12 @@ export const SplashScreen = () => {
           Journey
         </Text>
       </View>
-      <View
-        style={{
-          flex: 1,
-          justifyContent: 'center',
-          flexDirection: 'row',
-          alignItems: 'center',
-        }}>
+
+      <CenterRowContainer justifyContent="center">
         <ActivityIndicator size={'small'} />
-      </View>
+      </CenterRowContainer>
     </View>
   );
 };
 
 export default SplashScreen;
-
-const styles = StyleSheet.create({});

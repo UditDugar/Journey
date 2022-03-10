@@ -9,7 +9,12 @@ import {
 import React, {useEffect} from 'react';
 import {AppHeader} from '../../Components/AppHeader';
 import {AppColors} from '../../assets/AppColors';
-import {AccentButton, Container, NextButton} from '../../Components';
+import {
+  AccentButton,
+  CenterRowContainer,
+  Container,
+  NextButton,
+} from '../../Components';
 import {
   AddIcon,
   CalenderIcon,
@@ -82,10 +87,6 @@ const Gallery = ({route, navigation}) => {
           />
         )}
 
-        {/* <View style={{width:"100%",height:"100%",justifyContent:"center",alignItems:"center"}}>
-        <ImagePlaceHolder size={150} color={AppColors.LightGrey}/>
-
-        </View> */}
         <View
           style={{
             position: 'absolute',
@@ -161,18 +162,8 @@ const Gallery = ({route, navigation}) => {
         </View>
         <VertSpace size={50} />
 
-        <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-          }}>
-          <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}>
+        <CenterRowContainer>
+          <CenterRowContainer>
             <ShareIcon size={50} />
             <View style={{marginLeft: 20}}>
               <Text style={{fontWeight: '900', color: AppColors.MediumGrey}}>
@@ -182,24 +173,14 @@ const Gallery = ({route, navigation}) => {
                 Public
               </Text>
             </View>
-          </View>
+          </CenterRowContainer>
           <Text onPress={() => navigation.navigate('ContactsList')}>
             <EditWIcon />
           </Text>
-        </View>
+        </CenterRowContainer>
         <VertSpace size={30} />
-        <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-          }}>
-          <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}>
+        <CenterRowContainer>
+          <CenterRowContainer>
             <CalenderIcon size={50} />
             <View style={{marginLeft: 20}}>
               <Text style={{fontWeight: '900', color: AppColors.MediumGrey}}>
@@ -210,7 +191,8 @@ const Gallery = ({route, navigation}) => {
                 {newDate[0]}
               </Text>
             </View>
-          </View>
+          </CenterRowContainer>
+
           <Text
             onPress={() =>
               navigation.navigate('MonthPicker', {
@@ -219,7 +201,7 @@ const Gallery = ({route, navigation}) => {
             }>
             <EditWIcon />
           </Text>
-        </View>
+        </CenterRowContainer>
       </Container>
     </View>
   );

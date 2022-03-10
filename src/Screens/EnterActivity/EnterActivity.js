@@ -3,7 +3,12 @@ import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 
 import {AppColors} from '../../assets/AppColors';
-import {Container, NextButton, SelectableRadioButton} from '../../Components';
+import {
+  CenterRowContainer,
+  Container,
+  NextButton,
+  SelectableRadioButton,
+} from '../../Components';
 import {AppHeader} from '../../Components/AppHeader';
 import {AccentButton} from '../../Components/index';
 import {FontSize, Spacing, VertSpace} from '../../shared/Global.styles';
@@ -45,8 +50,6 @@ export const EnterActivity = ({route, navigation}) => {
   const [asyncDeviceInfo, setAsyncDeviceInfo] = React.useState(null);
   const newDate = state.split('-');
   const [user, setUser] = useState(null);
-  // console.log(asyncDeviceInfo.user.token);
-  // console.log(user.user.id);
   const EnterActivities = async () => {
     const data = {
       user_id: user.user.id,
@@ -56,7 +59,6 @@ export const EnterActivity = ({route, navigation}) => {
       is_important: selector.text,
       is_liked: selector1.text,
     };
-    const url = 'https://bingehq.com/journey-app/api/add-activity';
 
     console.log(data);
     PostApiCallWithBody(
@@ -64,30 +66,14 @@ export const EnterActivity = ({route, navigation}) => {
       API_TYPE.POST,
       asyncDeviceInfo.user.token,
       data,
-    ).then(data => {
-      console.log('message:', data);
-      navigation.goBack()
-    })
-    .catch(error => {
-      console.error('Error:', error);
-    });
-
-    // await fetch(url, {
-    //   method: 'POST', // or 'PUT'
-    //   headers: {
-    //     'Content-Type': 'application/json',
-    //     Authorization: `Bearer ${asyncDeviceInfo.user.token}`,
-    //   },
-    //   body: JSON.stringify(data),
-    // })
-    //   .then(response => response.json())
-    //   .then(async data => {
-    //     console.log('message:', data);
-    //     navigation.goBack()
-    //   })
-    //   .catch(error => {
-    //     console.error('Error:', error);
-    //   });
+    )
+      .then(data => {
+        console.log('message:', data);
+        navigation.goBack();
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
   };
 
   const [time, setTime] = useState({hour: 1, min: 30});
@@ -113,7 +99,6 @@ export const EnterActivity = ({route, navigation}) => {
           disabled={item === null ? true : false}
           onPress={() => {
             EnterActivities();
-            //, navigation.goBack();
           }}
         />
       </AppHeader>
@@ -125,7 +110,6 @@ export const EnterActivity = ({route, navigation}) => {
             navigation.navigate('ActivityListScreen', {
               onReturn: item => {
                 setItem(item);
-                // alert(item)
               },
               token: asyncDeviceInfo.user.token,
             })
@@ -133,12 +117,7 @@ export const EnterActivity = ({route, navigation}) => {
           {item === null ? (
             <Text style={styles.EnterActivity}>Enter Activity ...</Text>
           ) : (
-            <View
-              style={{
-                justifyContent: 'space-between',
-                flexDirection: 'row',
-                alignItems: 'center',
-              }}>
+            <CenterRowContainer>
               <Text
                 style={[
                   styles.EnterActivity,
@@ -149,7 +128,7 @@ export const EnterActivity = ({route, navigation}) => {
               <Text onPress={() => setItem(null)}>
                 <EditWIcon size={16} />
               </Text>
-            </View>
+            </CenterRowContainer>
           )}
         </TouchableOpacity>
 

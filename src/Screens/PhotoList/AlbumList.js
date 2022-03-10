@@ -7,7 +7,7 @@ import {AppFonts} from '../../assets/fonts/AppFonts';
 import {AppHeader} from '../../Components/AppHeader';
 import {Spacing, VertSpace, WhiteFadeView} from '../../shared/Global.styles';
 import {AlbumThumbNail} from './Albums.View';
-import { getPhotosFromAlbum } from './PhotosList';
+import {getPhotosFromAlbum} from './PhotosList';
 
 export function AlbumList({route, navigation}) {
   const [Foldernames, setFoldernames] = React.useState([]);
@@ -35,21 +35,18 @@ export function AlbumList({route, navigation}) {
         backgroundColor: '#161616',
         paddingHorizontal: Spacing.xlarge,
       }}>
-      <AppHeader padding={0} enableBack colorIcon={AppColors.white}/>
+      <AppHeader padding={0} enableBack colorIcon={AppColors.white} />
       <View>
         <WhiteFadeView reverse style={Styles.headerView}>
-          {/* <VertSpace size={30} /> */}
           <Text style={[Styles.headerTextView, {color: 'white'}]}>
             Select Folder
           </Text>
         </WhiteFadeView>
       </View>
 
-      {/* LIST OF ALBUMS */}
       <ScrollView showsVerticalScrollIndicator={false}>
-        {/* SPACE ADDITION */}
         <VertSpace size={80} />
-        {/* LOOPING THROUGH THE ALBUMS RESPONSES */}
+
         {Foldernames.map((item, index) => (
           <AlbumThumbNail
             key={index.toString()}

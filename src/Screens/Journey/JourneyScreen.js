@@ -127,6 +127,7 @@ const CalenderView = ({onPress, date = 3, month = 'Jan', year = '2022'}) => {
     </TouchableOpacity>
   );
 };
+
 const Box = ({
   progress = 0.5,
   color = 'green',
@@ -178,107 +179,15 @@ export const JourneyScreen = ({route, navigation}) => {
   );
 
   const newDate = state.split('-');
-  const [line, setLine] = React.useState(true);
 
-  const [Entry, setEntry] = React.useState([]);
-  const [Details, setDetails] = React.useState([]);
 
-  // React.useEffect(() => {
-  //   getData();
-  // }, [state]);
-
-  // const getData = async () => {
-  //   const data = {
-  //     user_id: id,
-  //     activity_date: state,
-  //   };
-
-  //   const url = 'https://bingehq.com/journey-app/api/get-activities-by-date';
-  //   await fetch(url, {
-  //     method: 'POST',
-  //     headers: {
-  //       'Content-Type': 'application/json',
-  //       Authorization: `Bearer ${token}`,
-  //     },
-  //     body: JSON.stringify(data),
-  //   })
-  //     .then(response => response.json())
-  //     .then(async data => {
-  //       if (data.status === 1) {
-  //         setEntry(data.respData);
-  //         await AsyncStorage.setItem('Response', JSON.stringify(data));
-  //       } else {
-  //         null;
-  //       }
-  //     })
-  //     .catch(error => {
-  //       console.error('Error:', error);
-  //     });
-  // };
 
   const [box0, setBox0] = React.useState(0);
   const [box1, setBox1] = React.useState(0);
   const [box2, setBox2] = React.useState(0);
   const [box3, setBox3] = React.useState(0);
 
-  var a = 0;
-  var b = 0;
-  var c = 0;
-  var d = 0;
-  // React.useEffect(() => {
-  //   {
-  //     Entry == null
-  //       ? null
-  //       : Entry.map((item, key) => {
-  //           {
-  //             item.is_important === 'yes' && item.is_liked === 'yes'
-  //               ? setBox0(
-  //                   (a =
-  //                     +a +
-  //                     +(
-  //                       (+Number(item.activity_time.split(':')[0]) * 60 +
-  //                         +Number(item.activity_time.split(':')[1])) /
-  //                       1440
-  //                     ).toFixed(2)),
-  //                 )
-  //               : setBox0(0);
-  //             item.is_important === 'no' && item.is_liked === 'no'
-  //               ? setBox1(
-  //                   (b =
-  //                     +b +
-  //                     +(
-  //                       (+Number(item.activity_time.split(':')[0]) * 60 +
-  //                         +Number(item.activity_time.split(':')[1])) /
-  //                       1440
-  //                     ).toFixed(2)),
-  //                 )
-  //               : setBox1(0);
-  //             item.is_important === 'yes' && item.is_liked === 'no'
-  //               ? setBox2(
-  //                   (c =
-  //                     +c +
-  //                     +(
-  //                       (+Number(item.activity_time.split(':')[0]) * 60 +
-  //                         +Number(item.activity_time.split(':')[1])) /
-  //                       1440
-  //                     ).toFixed(2)),
-  //                 )
-  //               : setBox2(0);
-  //             item.is_important === 'no' && item.is_liked === 'yes'
-  //               ? setBox3(
-  //                   (d =
-  //                     +d +
-  //                     +(
-  //                       (+Number(item.activity_time.split(':')[0]) * 60 +
-  //                         +Number(item.activity_time.split(':')[1])) /
-  //                       1440
-  //                     ).toFixed(2)),
-  //                 )
-  //               : setBox3(0);
-  //           }
-  //         });
-  //   }
-  // });
+  
   const MAX_LINES = 4;
   const [showText, setShowText] = React.useState(false);
   const [numberOfLines, setNumberOfLines] = React.useState(undefined);
@@ -367,7 +276,8 @@ export const JourneyScreen = ({route, navigation}) => {
             <Text
               style={{
                 color: '#fff',
-                fontSize: 14,
+                fontSize: 16,
+                lineHeight:26
               }}
               onTextLayout={onTextLayout}
               numberOfLines={numberOfLines}>

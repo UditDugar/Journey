@@ -10,18 +10,21 @@ import {
 } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 
-import {CenterContainer, Container, MainContainer, PressableButton} from '../../Components/index';
+import {
+  CenterContainer,
+  CenterRowContainer,
+  Container,
+  MainContainer,
+  PressableButton,
+} from '../../Components/index';
 import {Spacing, VertSpace} from '../../shared/Global.styles';
 import {AddCirecleIcon, AddIcon, BioCircleIcon} from '../../shared/Icon.Comp';
 import {ApiCall, Testing} from '../../ApiLogic/Auth.Api';
 import {API_TYPE, APP_APIS} from '../../ApiLogic/API_URL';
 import {Modal} from 'react-native-paper';
-import { Gravities, showToast } from '../../shared/Functions/ToastFunctions';
-
+import {Gravities, showToast} from '../../shared/Functions/ToastFunctions';
 
 export const AddList = ({route}) => {
-
-
   const navigation = useNavigation();
   const [asyncDeviceInfo, setAsyncDeviceInfo] = React.useState('');
   React.useEffect(() => {
@@ -41,28 +44,26 @@ export const AddList = ({route}) => {
     console.log(asyncDeviceInfo.user.token);
 
     ApiCall(APP_APIS.LOGOUT, API_TYPE.POST, asyncDeviceInfo.user.token)
-    .then(async data => {
-      if (data.status === 1) {
-        AsyncStorage.clear();
-        showToast("Logged Out Successfully",Gravities.BOTTOM)
-        navigation.navigate('LoginScreen');
-      } else {
-        showToast("Logout Error",Gravities.BOTTOM)
+      .then(async data => {
+        if (data.status === 1) {
+          AsyncStorage.clear();
+          showToast('Logged Out Successfully', Gravities.BOTTOM);
+          navigation.navigate('LoginScreen');
+        } else {
+          showToast('Logout Error', Gravities.BOTTOM);
 
-        alert("Logout Error"); 
-      
-      }
-    })
-    .catch(error => {
-      console.error('Error:', error);
-      showToast("Logout Error",Gravities.BOTTOM)
-    });
+          alert('Logout Error');
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        showToast('Logout Error', Gravities.BOTTOM);
+      });
   };
 
   return (
     <MainContainer>
-      <CenterContainer
-        padding={Spacing.xxlarge}>
+      <CenterContainer padding={Spacing.xxlarge}>
         <TouchableOpacity
           onPress={() =>
             navigation.navigate('EnterActivityScreen', {
@@ -89,11 +90,12 @@ export const AddList = ({route}) => {
           onPress={() => setModalVisible(!modalVisible)}
         />
       </CenterContainer>
+
       <Modal
         animationType="slide"
         transparent={true}
         visible={modalVisible}
-        onDismiss={()=>setModalVisible(!modalVisible)}
+        onDismiss={() => setModalVisible(!modalVisible)}
         onRequestClose={() => {
           Alert.alert('Modal has been closed.');
           setModalVisible(!modalVisible);
@@ -101,33 +103,31 @@ export const AddList = ({route}) => {
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
             <Text style={styles.modalText}>Do you want to Logout ?</Text>
-            <View
-              style={{
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                width:"100%",
-               marginTop:50
-              }}>
+            <CenterRowContainer style={{width: '100%', marginTop: 50}}>
               <Pressable
                 style={[styles.buttonClose]}
                 onPress={() => setModalVisible(!modalVisible)}>
-                <Text style={{color:"green",fontSize:20,fontWeight:"900"}}>No</Text>
+                <Text style={{color: 'green', fontSize: 20, fontWeight: '900'}}>
+                  No
+                </Text>
               </Pressable>
 
               <Pressable
                 style={[styles.buttonClose]}
-                onPress={() => {setModalVisible(!modalVisible),Logout()}}>
-                <Text style={{color:"red",fontSize:20,fontWeight:"900"}}>Yes</Text>
+                onPress={() => {
+                  setModalVisible(!modalVisible), Logout();
+                }}>
+                <Text style={{color: 'red', fontSize: 20, fontWeight: '900'}}>
+                  Yes
+                </Text>
               </Pressable>
-            </View>
+            </CenterRowContainer>
           </View>
         </View>
       </Modal>
     </MainContainer>
   );
 };
-
 
 const styles = StyleSheet.create({
   circle: {
@@ -167,22 +167,20 @@ const styles = StyleSheet.create({
     backgroundColor: '#F194FF',
   },
   buttonClose: {
-    height:30,
-    borderRadius:20,
-    color:"black"
+    height: 30,
+    borderRadius: 20,
+    color: 'black',
   },
   textStyle: {
     color: 'white',
     fontWeight: 'bold',
     textAlign: 'center',
- 
-
   },
   modalText: {
     marginBottom: 15,
     textAlign: 'center',
-    color:"#111111",
-    fontSize:20,
-    fontWeight:"900"
+    color: '#111111',
+    fontSize: 20,
+    fontWeight: '900',
   },
 });

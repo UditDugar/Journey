@@ -4,9 +4,7 @@ import React, {useEffect} from 'react';
 import {
   FlatList,
   Image,
-  ScrollView,
   Text,
-  TouchableOpacity,
   View,
   Pressable,
 } from 'react-native';
@@ -15,7 +13,7 @@ import {AppColors} from '../../assets/AppColors';
 import {AccentButton, Container} from '../../Components';
 import {useNavigation} from '@react-navigation/native';
 import {VertSpace, AppDimens, GStyles} from '../../shared/Global.styles';
-import CircleCheckBox, {LABEL_POSITION} from 'react-native-circle-checkbox';
+
 
 export const getPhotosFromAlbum = (groupname = '', after = '0', first = 20) => {
   return CameraRoll.getPhotos({
@@ -35,7 +33,6 @@ export const ImageGridView = ({
   size = AppDimens.width * 0.25,
   index,
   onPress = () => {},
-
   isSelected = false,
   selectIconView = true,
 }) => {
@@ -101,7 +98,6 @@ export const PhotosList = ({route, navigation}) => {
   const [GalleryImages, setGalleryImages] = React.useState([]);
   const [toggle, setToggle] = React.useState(false);
 
-  const carouselRef = React.useRef(null);
   useEffect(() => {
     setToggle(reg);
   },[]);

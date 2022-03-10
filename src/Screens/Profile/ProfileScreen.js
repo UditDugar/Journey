@@ -50,9 +50,6 @@ export const ProfilePicker = ({
         onPress={onPress}
         style={{...style, position: 'absolute'}}>
         <View>
-          {/* <View style={{ backgroundColor: 'red' }}>
-                        <Text>nice</Text>
-                    </View> */}
           <BioCircleIcon size={size} />
           <Image
             resizeMode={'cover'}
@@ -63,9 +60,7 @@ export const ProfilePicker = ({
               borderRadius: size / 2,
               position: 'absolute',
             }}
-            source={{uri: imageUrlParmas}}
-            // source={{ uri: `https://picsum.photos/id/1/${size}` }}
-          />
+            source={{uri: imageUrlParmas}}          />
           <View style={{position: 'absolute', bottom: 5, right: 0}}>
             <CameraButtonWhite size={size / 3} />
           </View>
@@ -114,6 +109,7 @@ export const ProfileScreen = ({route}) => {
   const [Gender, setGender] = React.useState({key: 1, text: 'male'});
   const [disable, setDisable] = React.useState(true);
   const navigation = useNavigation();
+  
   React.useEffect(() => {
     if (route.params?.imageList) {
       ImagePicker.openCropper({
@@ -192,25 +188,21 @@ export const ProfileScreen = ({route}) => {
           disabled={disable}
           onPress={() => {
             Registration();
-            //, navigation.navigate('AddListScreen');
           }}
         />
       </AppHeader>
 
       <ScrollView keyboardShouldPersistTaps="always">
-        {/* <Spinner visible={loading} textContent={'Loading...'} /> */}
 
         <VertSpace size={10} />
         <Container padding={Spacing.xxlarge}>
           <View style={{alignItems: 'center'}}>
-            {/* <AppButton title="tets" onPress={() => CropPhoto()} /> */}
             <ProfilePicker
               imageUrlParmas={imageUri}
               onPress={() => {
                 navigation.navigate('PhotosListScreen', {
                   onReturn: item => {
                     setImageUri(item);
-                    // alert(item)
                   },
                   reg: true,
                 });
@@ -345,7 +337,6 @@ export const Label1 = ({title = 'Title', required = false, onPress}) => {
       style={{
         flexDirection: 'row',
         justifyContent: 'space-between',
-        // backgroundColor: 'wheat',
       }}>
       <Text
         style={{

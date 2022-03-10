@@ -81,13 +81,12 @@ export function OtpVerification({route}) {
             ActiveColor="white"
             InActiveColor="black"
             onPress={() => {
-              // loginMethod(code);
               setLoginLocal();
             }}
           />
         </AppHeader>
 
-        {/* CONTENT MAIN DESING */}
+   
         <VertSpace />
         <Text
           style={{
@@ -114,66 +113,13 @@ export function OtpVerification({route}) {
             }}
           />
 
-          {/* <Timer initialMinute={2} initialSeconds={30} />
-          <View style={{ flexDirection: 'row' }}>
-            <Text style={styles.message_1}>Didn't receive the OTP ? </Text>
-            <HoriSpace size={Spacing.medium} />
-            <Ripple
-              onPress={() => {
-                Toast.showWithGravity(
-                  'Please fill all details',
-                  Toast.SHORT,
-                  Toast.CENTER
-                );
-              }}
-              rippleFades={true}
-              rippleContainerBorderRadius={10}
-            >
-              <Text style={{ ...styles.message_1, color: AppColors.Red }}>
-                Resend OTP
-              </Text>
-            </Ripple>
-          </View> */}
+
         </View>
         {loading == 0 ? <ActivityIndicator size="large" color="#fff" /> : null}
       </View>
     </SafeAreaView>
   );
 }
-
-// const Timer = ({ initialMinute = 2, initialSeconds = 10 }) => {
-//   const [minutes, setMinutes] = React.useState(initialMinute);
-//   const [seconds, setSeconds] = React.useState(initialSeconds);
-//   useEffect(() => {
-//     let myInterval = setInterval(() => {
-//       if (seconds > 0) {
-//         setSeconds(seconds - 1);
-//       }
-//       if (seconds === 0) {
-//         if (minutes === 0) {
-//           clearInterval(myInterval);
-//         } else {
-//           setMinutes(minutes - 1);
-//           setSeconds(59);
-//         }
-//       }
-//     }, 1000);
-
-//     return () => {
-//       clearInterval(myInterval);
-//     };
-//   });
-
-//   return (
-//     <View>
-//       {minutes === 0 && seconds === 0 ? null : (
-//         <Text>
-//           {minutes}:{seconds < 10 ? `0${seconds}` : seconds}
-//         </Text>
-//       )}
-//     </View>
-//   );
-// };
 
 const styles = StyleSheet.create({
   otpcontainer: {

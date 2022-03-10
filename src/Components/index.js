@@ -118,7 +118,25 @@ export const CenterContainer = ({
   );
 };
 
-
+export const CenterRowContainer = ({
+  padding = 0,
+  justifyContent='space-between',
+  children,
+  style = {},
+}) => {
+  return (
+    <View
+      style={{
+        ...style,
+        paddingHorizontal: padding,
+        justifyContent:justifyContent,
+        alignItems: 'center',
+        flexDirection:"row"
+      }}>
+      {children}
+    </View>
+  );
+};
 
 
 export const SelectableRadioButton = ({

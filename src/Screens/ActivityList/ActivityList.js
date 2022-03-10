@@ -1,7 +1,14 @@
 import AsyncStorage from '@react-native-community/async-storage';
 import {useNavigation} from '@react-navigation/native';
 import React, {useEffect, useState} from 'react';
-import {StyleSheet, Text, View, TextInput, FlatList, Keyboard} from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  TextInput,
+  FlatList,
+  Keyboard,
+} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import {API_TYPE, APP_APIS} from '../../ApiLogic/API_URL';
 import {ApiCall, PostApiCallWithBody} from '../../ApiLogic/Auth.Api';
@@ -86,11 +93,10 @@ export const ActivityList = ({route, navigation}) => {
             searchFilterFunction(text), setAddText(text);
           }}
           autoCorrect={false}
-          
         />
       </View>
       <VertSpace size={10} />
-      {AddText.length != 0 ? (
+      {search.length === 0 && AddText != '' ? (
         <Container
           padding={Spacing.xxlarge}
           style={{
@@ -121,11 +127,10 @@ export const ActivityList = ({route, navigation}) => {
           </Text>
         </Container>
       ) : null}
-      {Result.length === 0? (
+      {Result.length === 0 ? (
         <MainContainer>
-        <ActivityIndicator color="#178" size={'large'} />
+          <ActivityIndicator color="#178" size={'large'} />
         </MainContainer>
-        
       ) : (
         <Container padding={Spacing.xxlarge}>
           <VertSpace size={35} />
